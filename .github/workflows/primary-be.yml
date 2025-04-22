@@ -18,7 +18,9 @@ jobs:
           node-version: 18
 
       - name: install deps
-        run: npm install
+        run: |
+         cd user_management_service 
+         npm install
 
       - name: test-completed
         run: echo test test-completed
