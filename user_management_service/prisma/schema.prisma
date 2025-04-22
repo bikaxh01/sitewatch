@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id String @id @default(uuid())
+
+  firstName       String
+  lastName        String?
+  email           String          @unique
+  password        String?
+  avatarUrl       String?
+  signUpType      SignUpMethod
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  isVerified      Boolean         @default(false)
+  url             monitor[]
+  forgetPasswords forgetPassword?
+  changeEmail  changeEmail?
+}
+
+model forgetPassword {
+  id         String  @id @default(uuid())
+  userId     String  @unique
+  otp        Int
+  isVerified Boolean @default(false)
+  user       user    @relation(fields: [userId], references: [id])
+}
+
+model changeEmail {
+  id         String  @id @default(uuid())
+  userId     String  @unique
+  otp        Int
+  isVerified Boolean @default(false)
+  user       user    @relation(fields: [userId], references: [id])
+}
+
+model monitor {
+  id            String     @id @default(uuid())
+  monitorName   String?
+  url           String
+  domain        String
+  status        urlStatus  @default(PENDING)
+  checkInterval Int
+  userId        String
+  isDeleted     Boolean    @default(false)
+  isPaused      Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  Incident      Incident[]
+  user          user       @relation(fields: [userId], references: [id])
+}
+
+model Incident {
+  id        String    @id @default(uuid())
+  urlId     String
+  startTime DateTime
+  endTime   DateTime?
+  duration  Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  url       monitor   @relation(fields: [urlId], references: [id])
+}
+
+enum urlStatus {
+  UP
+  DOWN
+  PENDING
+}
+
+enum SignUpMethod {
+  GOOGLE
+  PASSWORD
+  GITHUB
+}

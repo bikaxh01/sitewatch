@@ -1,0 +1,30 @@
+{
+  "name": "monitoring_service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/index.ts",
+    "start": " node dist/index.js",
+    "build": "npm i && tsc -b"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@influxdata/influxdb3-client": "^1.1.0",
+    "axios": "^1.8.4",
+    "dotenv": "^16.4.7",
+    "kafkajs": "^2.2.4",
+    "nodemon": "^3.1.9",
+    "ping": "^0.4.4",
+    "redis": "^4.7.0",
+    "resend": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.14",
+    "@types/ping": "^0.4.4",
+     "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}

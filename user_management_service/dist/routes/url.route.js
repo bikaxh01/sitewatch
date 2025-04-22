@@ -1,0 +1,26 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.urlRoute = void 0;
+const express_1 = require("express");
+const response_1 = require("../utils/response");
+const url_controller_1 = require("../controllers/url.controller");
+const auth_1 = require("../middleware/auth");
+const reqValidator_1 = require("../middleware/reqValidator");
+const zod_1 = require("../types/zod");
+exports.urlRoute = (0, express_1.Router)();
+exports.urlRoute.get("/", (req, res) => {
+    return (0, response_1.sendResponse)(res, response_1.STATUS.SUCCESS, "All Good ✅✅", []);
+});
+exports.urlRoute.post("/register-monitor", (0, reqValidator_1.reqValidator)(zod_1.registerMonitorSchema), auth_1.validateUser, url_controller_1.registerMonitor);
+exports.urlRoute.get("/get-all-monitors", auth_1.validateUser, url_controller_1.getAllMonitors);
+exports.urlRoute.get("/get-monitor", auth_1.validateUser, url_controller_1.getMonitor);
+exports.urlRoute.get("/get-monitor-status", auth_1.validateUser, url_controller_1.getMonitorStatus);
+exports.urlRoute.get("/get-monitor-incidents", auth_1.validateUser, url_controller_1.getMonitorIncidents);
+exports.urlRoute.get("/get-monitor-stats", auth_1.validateUser, url_controller_1.getMonitorStats);
+exports.urlRoute.get("/get-user-incidents", auth_1.validateUser, url_controller_1.getAllIncidents);
+exports.urlRoute.post("/update-monitor", auth_1.validateUser, url_controller_1.updateMonitor);
+exports.urlRoute.get("/internal/get-urls", url_controller_1.getAllUrls);
+exports.urlRoute.patch("/internal/update-status", url_controller_1.updateMonitorStatus);
+exports.urlRoute.post("/internal/create-incident", url_controller_1.createIncident);
+exports.urlRoute.post("/internal/update-incident", url_controller_1.updateIncident);
+exports.urlRoute.get("/internal/get-incident", auth_1.validateUser, url_controller_1.getAllIncident);
