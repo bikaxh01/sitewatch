@@ -20,10 +20,13 @@ jobs:
           username: ${{secrets.DOCKER_USERNAME}}
           password: ${{secrets.DOCKER_TOKEN}}
 
-      - name: build image
-        run: |
-          cd user_management_service 
-          docker build -t bikaxh01/sitewatch-backend:${{github.sha}}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: push image
-        run: docker push 
+      - name: build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./user_management_service
+          file: dockerfile
+          push: true
+          tags: bikaxh01/sitewatch-backend:${{github.sha}}
