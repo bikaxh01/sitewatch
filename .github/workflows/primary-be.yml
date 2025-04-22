@@ -6,8 +6,16 @@ on:
       - main
 
 jobs:
-  say-hello:
-    runs-on: ubuntu-latest
-    steps:
-      - name: print hello world
-        run: echo Hello world task done
+  run-test:
+   runs-on: ubuntu-latest
+   steps:
+     - name: checkout repo
+       uses: actions/checkout@v3
+     - name: setup node
+       uses: actions/setup-node@v3
+       with:
+         node-version: 18
+     - name: install deps
+       uses: npm install
+     - name: test-completed
+       uses: echo test test-completed
