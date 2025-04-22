@@ -27,7 +27,7 @@ app.use("/api/user", userRoute);
 app.use("/api/url", urlRoute);
 
 app.get("/", (req: Request, res: Response) => {
-  return sendResponse(res, STATUS.NOT_ALLOWED, "All Good v2", []);
+  return sendResponse(res, STATUS.NOT_ALLOWED, "All Good v3", []);
 });
 
 app.listen(PORT, () => console.log(`Running at ${PORT} 🟢`));

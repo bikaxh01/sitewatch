@@ -27,6 +27,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./user_management_service
-          file: dockerfile
+          file: ./user_management_service/dockerfile
           push: true
           tags: bikaxh01/sitewatch-backend:${{github.sha}}
