@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import { Kafka } from "kafkajs";
+import { redisClient } from "./redis";
 config();
 
 const kafkaClient = new Kafka({
@@ -7,17 +8,26 @@ const kafkaClient = new Kafka({
   brokers: [process.env.KAFKA_URL as string],
 });
 
-async function pushToKafka(data:string) {
+async function pushToRedisQueue(data:string) {
   
-  const producer = await kafkaClient.producer();
-  await producer.connect();
 
-  await producer.send({
-    topic: "monitor", 
-    messages: [{ value: data }],
-  });
+  await redisClient.lPush("monitoring",data)
+  // const producer = await kafkaClient.producer();
+  // await producer.connect();
 
-  await producer.disconnect();
+  // await producer.send({
+  //   topic: "monitor", 
+  //   messages: [{ value: data }],
+  // });
+
+  // await producer.disconnect();
 }
 
-export {pushToKafka}
+
+async function getFromQueue() {
+  const data:any = await redisClient.rPop("monitoring")
+  console.log("🚀 ~ getFromQueue ~ data:", data)
+  return JSON.parse(data)
+}
+
+export {pushToRedisQueue,getFromQueue}

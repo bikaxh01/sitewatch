@@ -12,7 +12,13 @@ redisClient.on("error", (error) => {
 });
 
 (async () => {
-  redisClient.connect();
+try {
+  redisClient.connect()
+  console.log("Redis connected");
+  
+} catch (error) {
+  
+};
 })();
 
 const getMonitoringUrls = async () => {
