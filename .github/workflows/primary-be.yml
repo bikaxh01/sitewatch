@@ -18,7 +18,7 @@ jobs:
           node-version: 18
 
       - name: install deps
-        uses: npm install
-        
+        run: npm install
+
       - name: test-completed
-        uses: echo test test-completed
+        run: echo test test-completed
