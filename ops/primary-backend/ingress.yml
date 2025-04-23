@@ -2,13 +2,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: be-apps-ingress
-  namespace: default
+  namespace: sitewatch
   annotations:
     cert-manager.io/cluster-issuer: be-issuer
 spec:
   ingressClassName: nginx
   rules:
-  - host: api.sitewatch.tech
+  - host: be.sitewatch.tech
     http:
       paths:
       - path: /
@@ -20,6 +20,6 @@ spec:
               number: 8000
   tls:
   - hosts:
-    - api.sitewatch.tech 
+    - be.sitewatch.tech 
     secretName: letsencrypt-prod
     
