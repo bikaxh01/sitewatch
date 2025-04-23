@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: primary-be
-          image: bikaxh01/sitewatch-backend:ea9b111449d1989ee02f404465b28f16613bff8d
+          image: bikaxh01/sitewatch-backend:32f17407b26111d90b31d99d1527664b26c68fe9
           ports:
             - containerPort: 8000
           volumeMounts:
