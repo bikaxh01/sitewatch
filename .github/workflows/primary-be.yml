@@ -30,3 +30,20 @@ jobs:
           file: ./user_management_service/dockerfile
           push: true
           tags: bikaxh01/sitewatch-backend:${{github.sha}}
+
+      - name: update the manifest file
+        run: |
+           sed -i 's|image: bikaxh01/sitewatch-backend:.*|image: bikaxh01/sitewatch-backend:${{ github.sha }}|' ops/primary-backend/deployment.yml
+        
+      - name: push the yml change
+        run: |
+         git config --global user.email "<>"
+         git config --global user.name "<primary-backend action>"
+         git add ops/primary-backend/deployment.yml
+         git commit -m "be-yml changed ${{github.sha}}"
+         git push
+
+         
+
+
+ 

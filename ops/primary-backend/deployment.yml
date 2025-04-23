@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: primary-backend
+spec:
+  selector:
+    matchLabels:
+      app: primary-be
+  template:
+    metadata:
+      labels:
+        app: primary-be
+    spec:
+      containers:
+        - name: primary-be
+          image: bikaxh01/sitewatch-backend:v7
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+          - name: secret
+            mountPath: /home/app/.env
+            subPath: .env
+      volumes:
+        - name: secret
+          secret: 
+           secretName: sitewatch-be-secret
+           items: 
+            - key: .env
+              path: .env 
+---   
+apiVersion: v1
+kind: Service
+metadata:
+  name: be-service
+spec:
+  selector:
+    app: primary-be
+  ports:
+  - port: 8000
+    targetPort: 8000
+  type: ClusterIP
+
