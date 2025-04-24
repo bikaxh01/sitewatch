@@ -4,7 +4,7 @@ import { getMonitoringUrls, redisClient, syncRedisToDb } from "./config/redis";
 
 async function main() {
   //get urls
-
+console.log("testin main")
   const monitoringUrls = await getMonitoringUrls();
 
   if (monitoringUrls.length <= 0) {
@@ -26,7 +26,7 @@ async function main() {
 }
 
 cron.schedule("*/30 * * * * *", () => {
-  console.log("Executing main ");
+
 
   main();
 });
