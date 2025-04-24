@@ -39,6 +39,6 @@ jobs:
         run: |
           git config --global user.email "<>"
           git config --global user.name "<monitoring-srv action>"
-          git add ops/monitoring_service/deployment.yml
+          git add ops/monitoring-service/deployment.yml
           git commit -m "monitoring-svc-yml changed ${{github.sha}}"
           git push
