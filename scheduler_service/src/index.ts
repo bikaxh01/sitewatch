@@ -5,7 +5,7 @@ import { getMonitoringUrls, redisClient, syncRedisToDb } from "./config/redis";
 async function main() {
   //get urls ...
 
-console.log("v4")
+console.log("v3")
   const monitoringUrls = await getMonitoringUrls();
 
   if (monitoringUrls.length <= 0) {
