@@ -21,11 +21,13 @@ const worker = new Worker(
     console.log("🚀 ~ urlData:", urlData);
 
     try {
+      console.log("Checking for URL ",urlData);
+      
       const finalStatus: NetworkCheckResponse = await checkUrl(
         urlData.domain,
         urlData.url
       );
-
+ 
       const currentStatus = finalStatus.status !== "unknown" ? "UP" : "DOWN";
 
       if (urlData.status !== currentStatus) {
