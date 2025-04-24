@@ -15,7 +15,7 @@ config();
 const worker = new Worker(
   "Monitoring",
   async (job) => {
-    console.log("🚀 ~ job:", job);
+    
     const { data } = job;
     const urlData = JSON.parse(data);
     console.log("🚀 ~ urlData:", urlData);

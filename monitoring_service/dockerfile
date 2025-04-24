@@ -16,7 +16,6 @@ COPY . .
 RUN npm run build
 
 
-
 FROM base AS runner
 
 WORKDIR /home/app
@@ -24,8 +23,6 @@ WORKDIR /home/app
 COPY --from=builder /home/build/dist /home/app/dist
 COPY  --from=builder /home/build/package*.json .
 RUN npm install
-
-
 
 
 CMD [ "npm","run", "start" ]
