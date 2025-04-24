@@ -14,7 +14,9 @@ console.log("v3")
     return null;
   }
 
-  // send each to kafka
+  // send each to kafka because we have to do with kafka
+
+  
   for (const url of monitoringUrls) {
     
  
