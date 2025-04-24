@@ -3,7 +3,7 @@ import { pushToBullMQ } from "./config/BullMq";
 import { getMonitoringUrls, redisClient, syncRedisToDb } from "./config/redis";
 
 async function main() {
-  //get urls ....
+  //get urls ......
 console.log("v4")
   const monitoringUrls = await getMonitoringUrls();
 
