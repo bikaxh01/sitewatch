@@ -89,7 +89,7 @@ const worker = new Worker(
         },
       ]);
 
-      // save to db
+      // save to db with the https server
       const dbData: MonitorData = {
         http_status: finalStatus.status,
         ping_avg: finalStatus.pingRes.avg,
