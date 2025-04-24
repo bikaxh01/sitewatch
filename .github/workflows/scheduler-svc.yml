@@ -33,7 +33,7 @@ jobs:
 
       - name: update the manifest file
         run: |
-          sed -i 's|image:  bikaxh01/scheduler-srv:.*|image:  bikaxh01/scheduler-srv:${{ github.sha }}|' ops/scheduler-service/deployment.yml
+          sed -i 's|image:  bikaxh01/scheduler-srv:.*|image:bikaxh01/scheduler-srv:${{ github.sha }}|' ops/scheduler-service/deployment.yml
 
       - name: push the yml change
         run: |
