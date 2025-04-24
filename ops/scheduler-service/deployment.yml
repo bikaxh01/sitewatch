@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: scheduler-svc
-          image: bikaxh01/scheduler-srv:b242899c404209f249fc059fc248a8e2ae544bae
+          image: bikaxh01/scheduler-srv:7c6fd2b2f824286a53251e41abc11f63d4ad0ba8
           volumeMounts:
           - name: secret
             mountPath: /home/app/.env
