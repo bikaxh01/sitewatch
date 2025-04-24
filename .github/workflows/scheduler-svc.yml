@@ -1,11 +1,11 @@
-name: build and push primary-be
+name: Build and push scheduler-service
 
 on:
   push:
     branches:
       - main
     paths:
-      - "user_management_service/**"
+      - "scheduler_service/**"
 
 jobs:
   build-push:
@@ -26,24 +26,19 @@ jobs:
       - name: build and push
         uses: docker/build-push-action@v4
         with:
-          context: ./user_management_service
-          file: ./user_management_service/dockerfile
+          context: ./scheduler_service
+          file: ./scheduler_service/dockerfile
           push: true
-          tags: bikaxh01/sitewatch-backend:${{github.sha}}
+          tags: bikaxh01/scheduler-srv:${{github.sha}}
 
       - name: update the manifest file
         run: |
-           sed -i 's|image: bikaxh01/sitewatch-backend:.*|image: bikaxh01/sitewatch-backend:${{ github.sha }}|' ops/primary-backend/deployment.yml
-        
+          sed -i 's|image:  bikaxh01/scheduler-srv:.*|image:  bikaxh01/scheduler-srv:${{ github.sha }}|' ops/scheduler-service/deployment.yml
+
       - name: push the yml change
         run: |
-         git config --global user.email "<>"
-         git config --global user.name "<primary-backend action>"
-         git add ops/primary-backend/deployment.yml
-         git commit -m "be-yml changed ${{github.sha}}"
-         git push
-
-         
-
-
- 
+          git config --global user.email "<>"
+          git config --global user.name "<scheduler-srv action>"
+          git add ops/scheduler-service/deployment.yml
+          git commit -m "scheduler-svc-yml changed ${{github.sha}}"
+          git push

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduler-service
+  namespace: sitewatch
+spec:
+  selector:
+    matchLabels:
+      app: scheduler-svc
+  template:
+    metadata:
+      labels:
+        app: scheduler-svc
+    spec:
+      containers:
+        - name: scheduler-svc
+          image: bikaxh01/scheduler-srv:latest
+          volumeMounts:
+          - name: secret
+            mountPath: /home/app/.env
+            subPath: .env
+      volumes:
+        - name: secret
+          secret: 
+           secretName: sitewatch-scheduler-secret
+           items: 
+            - key: .env
+              path: .env 
+

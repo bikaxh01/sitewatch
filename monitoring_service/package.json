@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon ./src/index.ts",
     "start": " node dist/index.js",
-    "build": "npm i && tsc -b"
+    "build": "tsc -b"
   },
   "keywords": [],
   "author": "",
@@ -14,17 +14,16 @@
   "dependencies": {
     "@influxdata/influxdb3-client": "^1.1.0",
     "axios": "^1.8.4",
+    "bullmq": "^5.49.2",
     "dotenv": "^16.4.7",
-    "kafkajs": "^2.2.4",
     "nodemon": "^3.1.9",
     "ping": "^0.4.4",
     "redis": "^4.7.0",
-    "resend": "^4.2.0"
+    "resend": "^4.2.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/node": "^22.13.14",
-    "@types/ping": "^0.4.4",
-     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
+    "@types/ping": "^0.4.4"
   }
 }

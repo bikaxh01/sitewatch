@@ -31,8 +31,7 @@ export async function addToDb({
     .setFloatField("ping_avg", ping_avg)
     .setFloatField("ping_max", ping_max)
     .setFloatField("ping_min", ping_min)
-    .setField("http_status", http_status)
-    .setField("created_at", Date.now());
+    .setField("http_status", http_status);
 
  await client.write(data, database);
 

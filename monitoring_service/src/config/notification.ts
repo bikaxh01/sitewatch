@@ -28,7 +28,7 @@ export async function sendNotification(
 async function sendEmail(
   emailType: "UP" | "DOWN",
   emailId: string,
-  domain: string
+  domain: string 
 ) {
   const resend = new Resend(process.env.RESEND_API_KEY as string);
   const subject =

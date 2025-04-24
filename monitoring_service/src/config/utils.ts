@@ -1,7 +1,6 @@
 import axios from "axios";
 import { exec } from "child_process";
 
-import ping from "ping";
 
 export type NetworkCheckResponse = {
   status: string;
@@ -28,10 +27,11 @@ export async function checkUrl(domain: any, url: string) {
 
   // http check
   try {
-    const httpRes = await axios.head(url);
+    const httpRes = await axios.get(url);
 
     finalData["status"] = httpRes.status.toString();
   } catch (error: any) {
+    console.log("🚀 ~ checkUrl ~ error:", error);
     finalData.status = "unknown";
   }
 

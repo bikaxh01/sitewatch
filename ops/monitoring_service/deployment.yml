@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitoring-service
+  namespace: sitewatch
+spec:
+  selector:
+    matchLabels:
+      app: monitoring-svc
+  template:
+    metadata:
+      labels:
+        app: monitoring-svc
+    spec:
+      containers:
+        - name: monitoring-svc
+          image: bikaxh01/monitoring-svc:v1
+          volumeMounts:
+          - name: secret
+            mountPath: /home/app/.env
+            subPath: .env
+      volumes:
+        - name: secret
+          secret: 
+           secretName: sitewatch-monitoring-secret
+           items: 
+            - key: .env
+              path: .env 
+

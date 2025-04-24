@@ -27,7 +27,7 @@ app.use("/api/user", userRoute);
 app.use("/api/url", urlRoute);
 
 app.get("/", (req: Request, res: Response) => {
-  return sendResponse(res, STATUS.SUCCESS, "All Good v3 ready", []);
+  return sendResponse(res, STATUS.SUCCESS, "All Good v4 ready", []);
 });
 
 app.listen(PORT, () => console.log(`Running at ${PORT} 🟢`));

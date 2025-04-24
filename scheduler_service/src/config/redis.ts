@@ -12,37 +12,33 @@ redisClient.on("error", (error) => {
 });
 
 (async () => {
-try {
-  redisClient.connect()
-  console.log("Redis connected");
-  
-} catch (error) {
-  
-};
+  redisClient.connect();
 })();
 
 const getMonitoringUrls = async () => {
- 
-  const urls = await redisClient.zRange("monitoring:urls", 0, Date.now(),{BY:"SCORE"});
-  
- 
-//   if (urls.length > 0) {
-  
-    return urls;
-//   } else {
-//     // make api call
-//     console.log("Switched to Fallback🔴");
+  const urls = await redisClient.zRange("monitoring:urls", 0, Date.now(), {
+    BY: "SCORE",
+  });
 
-//     const res = await axios.get(
-//       `${process.env.URL_SERVICE_URL}/internal/get-urls`
-//     );
+  console.log("🚀 ~ getMonitoringUrls ~ urls:", urls);
 
-//     const urls = res.data.data.map((url: any) => {
-//       return JSON.stringify(url);
-//     });
+  //   if (urls.length > 0) {
 
-//     return urls;
-//   }
+  return urls;
+  //   } else {
+  //     // make api call
+  //     console.log("Switched to Fallback🔴");
+
+  //     const res = await axios.get(
+  //       `${process.env.URL_SERVICE_URL}/internal/get-urls`
+  //     );
+
+  //     const urls = res.data.data.map((url: any) => {
+  //       return JSON.stringify(url);
+  //     });
+
+  //     return urls;
+  //   }
 };
 
 const syncRedisToDb = async () => {
@@ -55,7 +51,7 @@ const syncRedisToDb = async () => {
     const urls = await res.data.data;
 
     for (const url of urls) {
-      const nextCheckTime = Date.now() + url.checkInterval * 60 * 1000;
+      const nextCheckTime = Date.now();
 
       const exists = await redisClient.zScore(
         "monitoring:urls",
@@ -63,8 +59,6 @@ const syncRedisToDb = async () => {
       );
 
       if (!exists) {
-       
-
         await redisClient.zAdd("monitoring:urls", [
           {
             value: JSON.stringify(url),
@@ -73,6 +67,7 @@ const syncRedisToDb = async () => {
         ]);
       }
     }
+
     console.log("Sync completed");
   } catch (error) {
     console.log("🚀 ~ syncRedisToDb ~ error:", error);
