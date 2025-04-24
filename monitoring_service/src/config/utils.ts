@@ -47,6 +47,7 @@ async function pingCheck(domain: string): Promise<PingRes> {
   return new Promise((resolve, reject) => {
     exec(`ping ${domain}`, (error, stdOut, stdErr) => {
       if (error) {
+        console.log("🚀 ~ exec ~ error:", error)
         const pingData: PingRes = {
           min: 0,
           avg: 0,
@@ -54,6 +55,7 @@ async function pingCheck(domain: string): Promise<PingRes> {
         };
         resolve({ ...pingData, alive: false });
       } else if (stdErr) {
+        console.log("🚀 ~ exec ~ stdErr:", stdErr)
         const pingData: PingRes = {
           min: 0,
           avg: 0,
@@ -61,7 +63,10 @@ async function pingCheck(domain: string): Promise<PingRes> {
         };
         resolve({ ...pingData, alive: false });
       } else {
+        console.log(`ping chekc ${stdOut} 🟢🟢`);
+        
         const res: PingRes = pingStatsExtraction(stdOut);
+        console.log("🚀 ~ exec ~ res:", res)
 
         resolve({ ...res, alive: true });
       }
