@@ -15,21 +15,21 @@ config();
 const worker = new Worker(
   "Monitoring",
   async (job) => {
-    
     const { data } = job;
     const urlData = JSON.parse(data);
     console.log("🚀 ~ urlData:", urlData);
 
     try {
-      console.log("Checking for URL ",urlData);
-      
+      console.log("Checking for URL ", urlData);
+
       const finalStatus: NetworkCheckResponse = await checkUrl(
         urlData.domain,
         urlData.url
       );
- 
-      const currentStatus = finalStatus.status !== "unknown" ? "UP" : "DOWN";
 
+      console.log("🚀 ~ finalStatus:", finalStatus);
+      const currentStatus = finalStatus.status !== "unknown" ? "UP" : "DOWN";
+      console.log("🚀 ~ currentStatus:", currentStatus);
       if (urlData.status !== currentStatus) {
         try {
           const res = await axios.patch(
@@ -50,7 +50,6 @@ const worker = new Worker(
           (urlData.status == "UP" && currentStatus == "DOWN") ||
           (urlData.status == "PENDING" && currentStatus == "DOWN")
         ) {
-
           //send alert
           //send alert
           console.log("Alert your site is Down");
@@ -118,4 +117,3 @@ const worker = new Worker(
 worker.on("error", (err) => {
   console.error("Worker error:", err);
 });
-
