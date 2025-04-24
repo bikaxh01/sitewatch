@@ -15,8 +15,8 @@ async function main() {
 
   // send each to kafka
   for (const url of monitoringUrls) {
-    //@ts-ignore
-    console.log(`🚀 ~ pushing  ${url.id} at ${new Date()}`);
+    
+ 
     pushToBullMQ(url);
 
     await redisClient.zRem("monitoring:urls", url);

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { log } from "console";
 import { config } from "dotenv";
-import { url } from "inspector";
+
 import { createClient } from "redis";
 config();
 
