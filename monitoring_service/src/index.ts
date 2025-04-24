@@ -49,7 +49,7 @@ const worker = new Worker(
           (urlData.status == "PENDING" && currentStatus == "DOWN")
         ) {
 
-          
+          //send alert
           //send alert
           console.log("Alert your site is Down");
           await sendNotification(currentStatus, urlData.domain, urlData.id);
