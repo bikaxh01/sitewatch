@@ -24,7 +24,8 @@ export async function checkUrl(domain: any, url: string) {
       min: 0,
     },
   };
-
+  console.log(`Chekcing for ${domain} url: ${url} 🟢🟢`);
+  
   // http check
   try {
     const httpRes = await axios.get(url);

@@ -27,9 +27,8 @@ const worker = new Worker(
         urlData.url
       );
 
-      console.log("🚀 ~ finalStatus:", finalStatus);
       const currentStatus = finalStatus.status !== "unknown" ? "UP" : "DOWN";
-      console.log("🚀 ~ currentStatus:", currentStatus);
+   
       if (urlData.status !== currentStatus) {
         try {
           const res = await axios.patch(
