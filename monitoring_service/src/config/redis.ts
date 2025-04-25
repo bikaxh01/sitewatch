@@ -7,6 +7,7 @@ const redisClient = createClient({ url: process.env.REDIS_URL });
 
 
 redisClient.on("error", (error) => {
+  console.log("🚀 ~ redisClient.on ~ error:", error)
   console.log("ERROR WHILE CONNECTING REDIS 🔴🔴");
 });
 

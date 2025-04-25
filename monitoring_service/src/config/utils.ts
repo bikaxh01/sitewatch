@@ -1,7 +1,6 @@
 import axios from "axios";
 import { exec } from "child_process";
 
-
 export type NetworkCheckResponse = {
   status: string;
   pingRes: PingRes;
@@ -25,7 +24,7 @@ export async function checkUrl(domain: any, url: string) {
     },
   };
   console.log(`Chekcing for ${domain} url: ${url} 🟢🟢`);
-  
+
   // http check
   try {
     const httpRes = await axios.get(url);
@@ -44,34 +43,69 @@ export async function checkUrl(domain: any, url: string) {
 }
 
 async function pingCheck(domain: string): Promise<PingRes> {
-  return new Promise((resolve, reject) => {
-    exec(`ping ${domain}`, (error, stdOut, stdErr) => {
-      if (error) {
-        console.log("🚀 ~ exec ~ error:", error)
-        const pingData: PingRes = {
-          min: 0,
-          avg: 0,
-          max: 0,
-        };
-        resolve({ ...pingData, alive: false });
-      } else if (stdErr) {
-        console.log("🚀 ~ exec ~ stdErr:", stdErr)
-        const pingData: PingRes = {
-          min: 0,
-          avg: 0,
-          max: 0,
-        };
-        resolve({ ...pingData, alive: false });
-      } else {
-        console.log(`ping chekc ${stdOut} 🟢🟢`);
-        
-        const res: PingRes = pingStatsExtraction(stdOut);
-        console.log("🚀 ~ exec ~ res:", res)
+  console.log(`checking ping for ${domain}`);
+  
+  if (process.env.ENV === "PROD") {
+    console.log(`checking ping for ${domain} in PROD`);
 
-        resolve({ ...res, alive: true });
-      }
+    return new Promise((resolve, reject) => {
+      exec(`ping -c 4 ${domain}`, (error, stdOut, stdErr) => {
+        if (error) {
+          console.log("🚀 ~ exec ~ error:", error);
+          const pingData: PingRes = {
+            min: 0,
+            avg: 0,
+            max: 0,
+          };
+          resolve({ ...pingData, alive: false });
+        } else if (stdErr) {
+          console.log("🚀 ~ exec ~ stdErr:", stdErr);
+          const pingData: PingRes = {
+            min: 0,
+            avg: 0,
+            max: 0,
+          };
+          resolve({ ...pingData, alive: false });
+        } else {
+          console.log(`ping chekc ${stdOut} 🟢🟢`);
+
+          const res: PingRes = pingStatsExtraction(stdOut);
+          console.log("🚀 ~ exec ~ res:", res);
+
+          resolve({ ...res, alive: true });
+        }
+      });
     });
-  });
+  } else {
+    return new Promise((resolve, reject) => {
+      exec(`ping ${domain}`, (error, stdOut, stdErr) => {
+        if (error) {
+          console.log("🚀 ~ exec ~ error:", error);
+          const pingData: PingRes = {
+            min: 0,
+            avg: 0,
+            max: 0,
+          };
+          resolve({ ...pingData, alive: false });
+        } else if (stdErr) {
+          console.log("🚀 ~ exec ~ stdErr:", stdErr);
+          const pingData: PingRes = {
+            min: 0,
+            avg: 0,
+            max: 0,
+          };
+          resolve({ ...pingData, alive: false });
+        } else {
+          console.log(`ping chekc ${stdOut} 🟢🟢`);
+
+          const res: PingRes = pingStatsExtraction(stdOut);
+          console.log("🚀 ~ exec ~ res:", res);
+
+          resolve({ ...res, alive: true });
+        }
+      });
+    });
+  }
 }
 
 function pingStatsExtraction(rawData: String): PingRes {
