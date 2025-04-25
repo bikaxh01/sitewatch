@@ -113,7 +113,7 @@ function pingStatsExtraction(rawData: String): PingRes {
     const env = process.env.ENV;
     if (env == "PROD") {
       const match = rawData.match(
-        /rtt min\/avg\/max\/mdev = ([\d.]+)\/([\d.]+)\/([\d.]+)\/([\d.]+) ms/
+        /round-trip min\/avg\/max = ([\d.]+)\/([\d.]+)\/([\d.]+) ms/
       );
 
       if (match) {
