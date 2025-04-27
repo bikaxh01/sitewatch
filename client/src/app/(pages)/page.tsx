@@ -1,24 +1,15 @@
-import Image from "next/image";
+import Footer from "./_components/Footer";
+import HeroSection from "./_components/hero";
+import Main from "./_components/main";
+import NavComponent from "./_components/Nav";
 
 export default function Home() {
   return (
-  <>
-  <div className=" bg-primary">
-
-    hello bg primary  primary
-  </div>
-  <div className="  text-primary">
-
-    hello text  primary
-  </div>
-  <div className="  text-muted-foreground ">
-
-    hello bg primary  primary
-  </div>
-  <div className=" bg-primary">
-
-    hello bg primary  primary
-  </div>
-  </>
+    <div className="  bg-[#0B0C14]  overflow-auto">
+       <NavComponent/>
+      <HeroSection />
+      <Main />
+      <Footer/>
+    </div>
   );
 }
