@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 import { useUser } from "@/hooks/useUser";
+import { motion } from "motion/react";
+
 
 function page() {
   const [showPassword, setShowPassword] = useState(false);
@@ -64,7 +66,7 @@ function page() {
   }, [email, password]);
 
   return (
-    <div className="py-4 pt- px-2 border rounded-md shadow-2xl shadow-blue-500/20 h-[25rem] w-[30%]">
+    <motion.div initial={{scale:0}} animate={{scale:1}} transition={{delay:0.5, ease:"backInOut"}} className="py-4 pt- px-2 border rounded-md shadow-2xl shadow-blue-500/20 h-[25rem] w-[30%]">
       <div className="  gap-3 flex flex-col items-center  justify-center">
         <h1 className=" text-2xl font-bold">Sign In</h1>
         <p className=" text-xs text-muted-foreground/80">
@@ -96,7 +98,7 @@ function page() {
             />
             <span className="w-8 rounded-r-md border border-l-0 flex items-center justify-center">
               <button onClick={handlePassword}>
-                {showPassword ? <EyeOff /> : <Eye />}
+                {showPassword ? <EyeOff className=" size-4" /> : <Eye className=" size-4" />}
               </button>
             </span>
           </div>
@@ -114,7 +116,7 @@ function page() {
           </Link>
         </p>
       </form>
-    </div>
+    </motion.div>
   );
 }
 
