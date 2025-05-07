@@ -3,7 +3,7 @@ import { config } from "dotenv";
 import axios from "axios";
 
 import { checkUrl, NetworkCheckResponse } from "./config/utils";
-import { addToDb, MonitorData } from "./config/influx";
+
 import { redisClient } from "./config/redis";
 import { sendNotification } from "./config/notification";
 
@@ -91,16 +91,7 @@ const worker = new Worker(
         },
       ]);
 
-      // save to db with the https server
-      const dbData: MonitorData = {
-        http_status: finalStatus.status,
-        ping_avg: finalStatus.pingRes.avg,
-        ping_max: finalStatus.pingRes.max,
-        ping_min: finalStatus.pingRes.min,
-        url: urlData.url,
-        urlId: urlData.id,
-      };
-      await addToDb(dbData);
+      // publish to stats
     } catch (error) {
       console.log("🚀 ~ main ~ error:", error);
     }
