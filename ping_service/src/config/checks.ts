@@ -41,6 +41,7 @@ export async function getStats(url: string): Promise<StatsResponse> {
             resolve(response);
           } else {
             const parsedResponse = JSON.parse(stdOut);
+            console.log("🚀 ~ returnnewPromise ~ parsedResponse:", parsedResponse)
             // parse response extract stats conver to milisecond
             const finalResponse: StatsResponse = {
               name_lookup: secondToMillisecond(parsedResponse.name_lookup),
