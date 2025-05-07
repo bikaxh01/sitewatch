@@ -5,7 +5,6 @@ config();
 const token = process.env.INFLUXDB_TOKEN;
 const host = process.env.INFLUXDB_HOST;
 const bucket = process.env.INFLUX_BUCKET;
-let database = bucket;
 
 export interface StatsData {
   urlId: string;
@@ -15,6 +14,7 @@ export interface StatsData {
   tlsHandshake: number;
   dataTransfer: number;
   totalTime: number;
+  region: string;
 }
 export async function addToDb({
   urlId,
@@ -23,19 +23,26 @@ export async function addToDb({
   dataTransfer,
   nameLookup,
   tlsHandshake,
-  totalTime
+  totalTime,
+  region,
 }: StatsData) {
-  const client = new InfluxDBClient({ host: host!, token: token });
-  const data = Point.measurement("monitoring_stats")
-    .setTag("urlId", urlId)
-    .setTag("url", url)
-    .setFloatField("tcp_connection",tcpConnection )
-    .setFloatField("name_lookup", nameLookup)
-    .setFloatField("tls_handshake", tlsHandshake)
-    .setFloatField("data_transfer", dataTransfer)
-    .setField("total_time", totalTime);
+  try {
+    const client = new InfluxDBClient({ host: host!, token: token });
 
-  await client.write(data, database);
+    const data = Point.measurement("monitoring_stats")
+      .setTag("urlId", urlId)
+      .setTag("url", url)
+      .setTag("region", region)
+      .setFloatField("tcp_connection", tcpConnection)
+      .setFloatField("name_lookup", nameLookup)
+      .setFloatField("tls_handshake", tlsHandshake)
+      .setFloatField("data_transfer", dataTransfer)
+      .setFloatField("total_time", totalTime);
 
-  client.close();
+    const res = await client.write(data, bucket);
+
+    client.close();
+  } catch (error) {
+    console.log("🚀 ~ error:", error);
+  }
 }
