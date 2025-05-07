@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: monitoring-svc
-          image: bikaxh01/monitoring-svc:e988bfc7941d8f8530842a62ea126ae4569da06c
+          image: bikaxh01/monitoring-svc:5a13d49845649c05e3fcb2b1e8055c88682bb43b
           volumeMounts:
           - name: secret
             mountPath: /home/app/.env
