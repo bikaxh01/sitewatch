@@ -13,8 +13,14 @@
   "license": "ISC",
   "dependencies": {
     "@influxdata/influxdb3-client": "^1.1.0",
+    "axios": "^1.9.0",
     "dotenv": "^16.5.0",
     "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "@types/ws": "^8.5.14",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.15"
   }
 }
