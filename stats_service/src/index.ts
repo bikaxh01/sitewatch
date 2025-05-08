@@ -1,25 +1,42 @@
 import { config } from "dotenv";
 import { getStats } from "./config/checks";
 import { addToDb, StatsData } from "./config/db";
+import WebSocket from "ws";
+
+const ws = new WebSocket("ws://localhost:8000");
+
+ws.on("message", (data) => {
+  console.log("ws connected");
+  const obj = data.toString();
+  const parsedData = JSON.parse(obj);
+  console.log("🚀 ~ ws.on ~ parsedData:", parsedData)
+ 
+  main(parsedData);
+});
+
 config();
 
 const currentRegion = process.env.Region;
 
-
-// subscribe topic 
+// subscribe topic
 // get data
 // parse data
 
-
-async function main() {
-  const urlId = "123123123";
-  const url = "https://www.example.com";
+async function main(data: any) {
+  console.log("🚀 ~ main ~ data:", data)
+  if (!data) {
+    console.log("No data received.");
+    return;
+  }
+  
+  const urlId = data.data;
+  const url = data.url;
   const statsResult = await getStats(url);
 
   if (!currentRegion) {
     console.log("Invalid region 🔴");
     process.exit(0);
-    return
+    return;
   }
 
   const finalData: StatsData = {
@@ -33,7 +50,5 @@ async function main() {
     urlId: urlId,
   };
 
- await addToDb(finalData);
+  await addToDb(finalData);
 }
-
-main();
