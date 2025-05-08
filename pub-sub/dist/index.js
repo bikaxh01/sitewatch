@@ -30,7 +30,7 @@ wss.on("connection", function connection(ws) {
     ws.on("message", function message(data, isBinary) {
         wss.clients.forEach(function each(client) {
             if (client !== ws && client.readyState === ws_1.default.OPEN) {
-                client.send(data, { binary: isBinary });
+                client.send(data);
                 ws.send(data);
             }
         });

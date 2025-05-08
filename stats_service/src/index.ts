@@ -6,11 +6,8 @@ import WebSocket from "ws";
 const ws = new WebSocket("ws://localhost:8000");
 
 ws.on("message", (data) => {
-  console.log("ws connected");
   const obj = data.toString();
   const parsedData = JSON.parse(obj);
-  console.log("🚀 ~ ws.on ~ parsedData:", parsedData)
- 
   main(parsedData);
 });
 
@@ -52,3 +49,4 @@ async function main(data: any) {
 
   await addToDb(finalData);
 }
+
