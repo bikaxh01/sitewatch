@@ -41,6 +41,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-better-stack-bg: var(--better-stack-bg-color);
+  --color-better-stack-primary: var(--better-stack-blue);
 }
 
 :root {
@@ -110,6 +112,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --better-stack-bg-color: oklch(0.16 0.0171 278.71);
+  --better-stack-blue:oklch(0.46 0.1513 276.36);
 }
 
 @layer base {

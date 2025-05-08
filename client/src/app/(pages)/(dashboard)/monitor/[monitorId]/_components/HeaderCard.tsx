@@ -64,12 +64,12 @@ function HeaderCard({ open, setOpen, monitor }: HeaderCardProp) {
         </div>
       </div>
       <div className="  h-full  flex items-center  gap-4">
-        <Button disabled className=" text-secondary-foreground" variant={"secondary"}>
+        {/* <Button disabled className=" text-secondary-foreground" variant={"secondary"}>
           <span>
             <CirclePause className=" size-4" />
           </span>
           <span>Pause</span>
-        </Button>
+        </Button> */}
         <Button className=" text-secondary-foreground" variant={"secondary"}>
           <span>
             <BellRing className=" size-4" />

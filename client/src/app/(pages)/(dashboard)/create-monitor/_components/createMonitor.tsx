@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 function CreateMonitor() {
   const [disableButton, setDisableButton] = useState(true);
   const [monitorName, setMonitor] = useState("");
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState("https://");
   const [checkInterval, setCheckInterval] = useState("3");
 
   useEffect(() => {

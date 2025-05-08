@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { CircleChevronRight, Eye, EyeOff, Save } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { CircleChevronRight, Eye, EyeOff, Globe, Save } from "lucide-react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 import axios from "axios";
 import { setMaxListeners } from "events";
@@ -9,8 +9,9 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useUser } from "@/hooks/useUser";
+import { motion } from "motion/react";
 function page() {
-  const [showPassword, setShowPassword] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -22,6 +23,14 @@ function page() {
   const [emailMessage, setEmailMessage] = useState<any>(null);
 
   const router = useRouter();
+
+  const firstNameRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (firstNameRef.current) {
+      firstNameRef.current.focus();
+    }
+  }, []);
 
   useEffect(() => {
     // check email
@@ -106,119 +115,156 @@ function page() {
   };
 
   return (
-    <div className=" py-4 px-2   border rounded-md shadow-2xl shadow-blue-500/20  h-[32rem] w-[30%] ">
-      <div className="  gap-3 flex flex-col items-center  justify-center">
-        <h1 className=" text-2xl font-bold">Sign up for free</h1>
-        <p className=" text-xs text-muted-foreground/80">
-          Already have an account ?{" "}
-          <Link href={"/auth/sign-in"} className="  text-blue-600 underline">
-            sign In
-          </Link>
-        </p>
-      </div>
-      <div>
-        <form className="  p-2 flex flex-col gap-2" onSubmit={handleSubmit}>
-          <div className=" flex flex-col gap-y-1.5">
-            <label className=" text-xs  text-muted-foreground">
-              First name
-            </label>
-            <input
-              className="  border-2 w-full  h-10 rounded-md text-sm p-2"
-              placeholder="John"
-              name="FullName"
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value.trim())}
-            />
-          </div>
-          <div className=" flex flex-col gap-y-1.5">
-            <label className=" text-xs text-muted-foreground">Last name</label>
-            <input
-              className=" w-full border-2 h-10 rounded-md text-sm p-2"
-              placeholder="Doe"
-              type="text"
-              name="LastName"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value.trim())}
-            />
-          </div>
-          <div className=" flex flex-col gap-y-1.5">
-            <label className=" text-xs text-muted-foreground">Email</label>
-            <input
-              className=" w-full border-2  h-10 rounded-md text-sm p-2"
-              placeholder="john@example.com"
-              type="email"
-              name="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value.trim())}
-            />
-
-            {emailMessage && (
-              <span
-                className={`${
-                  emailMessage.type === "Success"
-                    ? "text-green-400"
-                    : "text-red-400"
-                } text-xs`}
-              >
-                {emailMessage.message}
-              </span>
-            )}
-          </div>
-          <div className=" flex flex-col gap-y-1.5 ">
-            <label className=" text-xs text-muted-foreground">Password</label>
-            <div className="flex">
-              <input
-                className=" w-full z-10  border-2  border-r-0 flex  h-10 rounded-l-md text-sm p-2"
-                name="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value.trim())}
-                type={showPassword ? "text" : "password"}
-              />
-              <span className=" w-8 rounded-r-md  border  border-l-0  flex items-center justify-center">
-                <button onClick={handleShowPassword}>
-                  {showPassword ? (
-                    <EyeOff className=" size-4" />
-                  ) : (
-                    <Eye className=" size-4" />
-                  )}
-                </button>
-              </span>
-            </div>
-          </div>
-          <div className=" flex flex-col gap-y-1.5">
-            <label className=" text-xs text-muted-foreground">
-              Confirm password
-            </label>
-            <div className="flex">
-              <input
-                className=" w-full z-10  border-2  border-r-0 flex  h-10 rounded-l-md text-sm p-2"
-                name="ConfirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value.trim())}
-                type={showConfirmPassword ? "text" : "password"}
-              />
-              <span className=" w-8 rounded-r-md  border  border-l-0  flex items-center justify-center">
-                <button onClick={handleConfirmPassword}>
-                  {showConfirmPassword ? (
-                    <EyeOff className=" size-4" />
-                  ) : (
-                    <Eye className=" size-4" />
-                  )}
-                </button>
-              </span>
-            </div>
-          </div>
-
-          <Button
-            disabled={disableButton || emailMessage.type === "Error`"}
-            type="submit"
-            className=" mt-2 flex items-center justify-center"
+    <div
+      style={{
+        backgroundImage:
+          "url('https://betterstack.com/assets/auth/flare-v3-b1df91c6207d51591419bda1b1582549116182616361be4efcbc774b9ba2ee1b.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+      className="w-screen h-screen flex items-center justify-center"
+    >
+      <div className="h-screen w-[30%]">
+        <div className="mt-[5rem]">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.5, ease: "backInOut" }}
+            className="flex flex-col gap-4 justify-center items-center"
           >
-            <span>Create Account</span>
-            <CircleChevronRight className=" size-4" />
-          </Button>
-        </form>
+            <div className="flex flex-col gap-2 justify-center items-center">
+              <Globe />
+              <h1 className="text-3xl font-bold">Sign up for free</h1>
+              <p className="text-xs text-muted-foreground/80">
+                Already have an account?{" "}
+                <Link
+                  href={"/auth/sign-in"}
+                  className="text-blue-600 underline"
+                >
+                  Sign In
+                </Link>
+              </p>
+            </div>
+
+            <div className="w-full p-2">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                {/* First Name and Last Name in same row */}
+                <div className="flex gap-4">
+                  <div className="flex flex-col gap-y-2 flex-1">
+                    <label className="text-xs text-muted-foreground">
+                      First name
+                    </label>
+                    <input
+                      ref={firstNameRef}
+                      type="text"
+                      placeholder="John"
+                      className="border-2 w-full h-12 bg-better-stack-bg focus:outline-0 focus:border-better-stack-primary focus:shadow-[0_20px_50px_rgba(8,_112,_184,_0.7)] rounded-md text-sm p-2"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value.trim())}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-y-2 flex-1">
+                    <label className="text-xs text-muted-foreground">
+                      Last name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Doe"
+                      className="border-2 w-full h-12 bg-better-stack-bg focus:outline-0 focus:border-better-stack-primary focus:shadow-[0_20px_50px_rgba(8,_112,_184,_0.7)] rounded-md text-sm p-2"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value.trim())}
+                    />
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div className="flex flex-col gap-y-2">
+                  <label className="text-xs text-muted-foreground">Email</label>
+                  <input
+                    type="email"
+                    placeholder="john@example.com"
+                    className="border-2 w-full h-12 bg-better-stack-bg focus:outline-0 focus:border-better-stack-primary focus:shadow-[0_20px_50px_rgba(8,_112,_184,_0.7)] rounded-md text-sm p-2"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value.trim())}
+                  />
+                  {emailMessage && (
+                    <span
+                      className={`${
+                        emailMessage.type === "Success"
+                          ? "text-green-400"
+                          : "text-red-400"
+                      } text-xs`}
+                    >
+                      {emailMessage.message}
+                    </span>
+                  )}
+                </div>
+
+                {/* Password */}
+                <div className="flex flex-col gap-y-2">
+                  <label className="text-xs text-muted-foreground">
+                    Password
+                  </label>
+                  <div className="flex border-2 focus-within:border-better-stack-primary rounded-md focus-within:shadow-[0_20px_50px_rgba(8,_112,_184,_0.7)]">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="w-full z-10 border-2 focus:outline-0 flex bg-better-stack-bg h-12 rounded-l-md text-sm p-2"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value.trim())}
+                    />
+                    <span className="w-8 rounded-r-md border border-l-0 flex items-center bg-better-stack-bg justify-center">
+                      <button onClick={handleShowPassword} type="button">
+                        {showPassword ? (
+                          <EyeOff className="size-4" />
+                        ) : (
+                          <Eye className="size-4" />
+                        )}
+                      </button>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Confirm Password */}
+                <div className="flex flex-col gap-y-2">
+                  <label className="text-xs text-muted-foreground">
+                    Confirm password
+                  </label>
+                  <div className="flex border-2 focus-within:border-better-stack-primary rounded-md focus-within:shadow-[0_20px_50px_rgba(8,_112,_184,_0.7)]">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      className="w-full z-10 border-2 focus:outline-0 flex bg-better-stack-bg h-12 rounded-l-md text-sm p-2"
+                      value={confirmPassword}
+                      onChange={(e) =>
+                        setConfirmPassword(e.target.value.trim())
+                      }
+                    />
+                    <span className="w-8 rounded-r-md border border-l-0 flex items-center bg-better-stack-bg justify-center">
+                      <button onClick={handleConfirmPassword} type="button">
+                        {showConfirmPassword ? (
+                          <EyeOff className="size-4" />
+                        ) : (
+                          <Eye className="size-4" />
+                        )}
+                      </button>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  disabled={disableButton || emailMessage?.type === "Error"}
+                  className="mt-4 flex items-center bg-better-stack-primary text-white hover:bg-better-stack-primary/80 
+                  disabled:bg-better-stack-primary/80 disabled:opacity-90 justify-center"
+                >
+                  <span>Create Account</span>
+                  <CircleChevronRight className="size-4 ml-2" />
+                </Button>
+              </form>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
