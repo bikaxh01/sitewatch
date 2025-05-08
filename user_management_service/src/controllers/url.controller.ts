@@ -90,7 +90,7 @@ export async function updateMonitorStatus(req: Request, res: Response) {
 
 export async function createIncident(req: Request, res: Response) {
   try {
-    const { urlId, startTime } = req.body;
+    const { urlId, startTime,imageUrl } = req.body;
 
     if (!urlId || !startTime) {
       return sendResponse(res, STATUS.NOT_ALLOWED, "Invalid query");
@@ -110,6 +110,7 @@ export async function createIncident(req: Request, res: Response) {
       data: {
         urlId: urlId as string,
         startTime: new Date(startTime),
+        imageUrl
       },
     });
 

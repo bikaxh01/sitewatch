@@ -67,6 +67,7 @@ model Incident {
   urlId     String
   startTime DateTime
   endTime   DateTime?
+  imageUrl  String ?
   duration  Int?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
