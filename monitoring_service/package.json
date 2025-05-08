@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@influxdata/influxdb3-client": "^1.1.0",
+    "@types/ws": "^8.18.1",
     "axios": "^1.8.4",
     "bullmq": "^5.49.2",
     "dotenv": "^16.4.7",
@@ -20,7 +21,8 @@
     "ping": "^0.4.4",
     "redis": "^4.7.0",
     "resend": "^4.2.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "ws": "^8.18.2"
   },
   "devDependencies": {
     "@types/node": "^22.13.14",

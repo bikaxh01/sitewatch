@@ -3,33 +3,27 @@ import { getStats } from "./config/checks";
 import { addToDb, StatsData } from "./config/db";
 import WebSocket from "ws";
 
-const ws = new WebSocket("ws://localhost:8000");
+config();
+const ws = new WebSocket(process.env.WS_SERVER as string);
 
 ws.on("message", (data) => {
-  console.log("ws connected");
   const obj = data.toString();
   const parsedData = JSON.parse(obj);
-  console.log("🚀 ~ ws.on ~ parsedData:", parsedData)
- 
+
   main(parsedData);
 });
 
-config();
 
 const currentRegion = process.env.Region;
 
-// subscribe topic
-// get data
-// parse data
-
 async function main(data: any) {
-  console.log("🚀 ~ main ~ data:", data)
+  console.log("🚀 ~ main ~ data:", data);
   if (!data) {
     console.log("No data received.");
     return;
   }
-  
-  const urlId = data.data;
+
+  const urlId = data.urlId;
   const url = data.url;
   const statsResult = await getStats(url);
 
@@ -49,6 +43,7 @@ async function main(data: any) {
     url: url,
     urlId: urlId,
   };
+  console.log("🚀 ~ main ~ finalData:", finalData);
 
   await addToDb(finalData);
 }
