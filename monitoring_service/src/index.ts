@@ -96,7 +96,7 @@ const worker = new Worker(
         },
       ]);
 
-      pushToStats({ urlId: urlData.id, url: urlData.url });
+      await pushToStats({ urlId: urlData.id, url: urlData.url });
     } catch (error) {
       console.log("🚀 ~ main ~ error:", error);
     }
