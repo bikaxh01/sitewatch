@@ -60,13 +60,13 @@ export async function emailSignup(req: Request, res: Response) {
 
     const token = jwt.sign(payload, jwtSecret);
     // generate link : baseurl+?token=jwt
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-      from: "Forget-password<Alert@sitewatch.tech>",
-      to: [email],
-      subject: "Verify you email",
-      html: `<p>you verification link is ${process.env.BASE_URL}/api/user/signupVerifyEmail?token=${token}  </p>`,
-    });
+    // const resend = new Resend(process.env.RESEND_API_KEY);
+    // await resend.emails.send({
+    //   from: "Forget-password<Alert@sitewatch.tech>",
+    //   to: [email],
+    //   subject: "Verify you email",
+    //   html: `<p>you verification link is ${process.env.BASE_URL}/api/user/signupVerifyEmail?token=${token}  </p>`,
+    // });
 
     return sendResponse(res, STATUS.CREATED, "User created", user);
   } catch (error) {
