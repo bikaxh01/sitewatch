@@ -47,3 +47,4 @@ async function main(data: any) {
 
   await addToDb(finalData);
 }
+

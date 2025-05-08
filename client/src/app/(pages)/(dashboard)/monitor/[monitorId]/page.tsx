@@ -70,6 +70,12 @@ function Monitors({ params }: MonitorPageParams) {
     const intervalId = setInterval(getStatus, 1000 * 60);
     () => clearInterval(intervalId);
   }, [monitorId]);
+  
+  
+  type StatusCardProp = {
+    checkInterval: string;
+  };
+
 
   const [open, setOpen] = useState(false);
   return (
@@ -93,7 +99,7 @@ function Monitors({ params }: MonitorPageParams) {
       </div>
       <div className="row-span-3  min-h-34   ">
         <StatusCard
-          checkInterval={monitorDetail ? monitorDetail.checkInterval : ""}
+          checkInterval={monitorDetail ? String(monitorDetail.checkInterval) : ""}
           incidentCount={incidentCount}
           lastChecked={lastChecked}
           status={status}
