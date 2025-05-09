@@ -14,7 +14,7 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 
-const allowedOrigins = ["http://localhost:3000", "http://sitewatch.tech"];
+const allowedOrigins = ["http://localhost:3000", "https://sitewatch.tech"];
 
 const corsOptions = {
   origin: function (origin, callback) {
