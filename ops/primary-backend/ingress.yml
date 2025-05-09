@@ -18,8 +18,19 @@ spec:
             name: be-service
             port:
               number: 8000
+  - host: sitewatch.tech
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: client
+            port:
+              number: 3000
   tls:
   - hosts:
     - be.sitewatch.tech 
+    - sitewatch.tech 
     secretName: letsencrypt-prod
     
