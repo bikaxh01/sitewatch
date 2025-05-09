@@ -42,5 +42,6 @@ spec:
   - hosts:
     - be.sitewatch.tech 
     - sitewatch.tech 
+    - ws.sitewatch.tech 
     secretName: letsencrypt-prod
     

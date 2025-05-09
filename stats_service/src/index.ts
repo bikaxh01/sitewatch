@@ -2,19 +2,31 @@ import { config } from "dotenv";
 import { getStats } from "./config/checks";
 import { addToDb, StatsData } from "./config/db";
 import WebSocket from "ws";
+import  https  from 'https';
 
+// Option 1: Completely skip TLS validation (DEV ONLY – not for production!)
+const agent = new https.Agent({
+  rejectUnauthorized: false
+});
 config();
-const ws = new WebSocket(process.env.WS_SERVER as string);
+const ws = new WebSocket(process.env.WS_SERVER as string,{agent});
 
 ws.on("message", (data) => {
-  const obj = data.toString();
-  const parsedData = JSON.parse(obj);
+ try {
+   const obj = data.toString();
+   const parsedData = JSON.parse(obj);
+   main(parsedData);
+ } catch (error) {
+  console.log("Invalid data received");
+  
+ }
 
-  main(parsedData);
 });
 
 
+
 const currentRegion = process.env.Region;
+
 
 async function main(data: any) {
   console.log("🚀 ~ main ~ data:", data);
