@@ -2,31 +2,49 @@ import { config } from "dotenv";
 import { getStats } from "./config/checks";
 import { addToDb, StatsData } from "./config/db";
 import WebSocket from "ws";
-import  https  from 'https';
+import https from "https";
 
-// Option 1: Completely skip TLS validation (DEV ONLY – not for production!)
 const agent = new https.Agent({
-  rejectUnauthorized: false
+  rejectUnauthorized: false,
 });
 config();
-const ws = new WebSocket(process.env.WS_SERVER as string,{agent});
 
-ws.on("message", (data) => {
- try {
-   const obj = data.toString();
-   const parsedData = JSON.parse(obj);
-   main(parsedData);
- } catch (error) {
-  console.log("Invalid data received");
-  
- }
+function wsConnection() {
+  const ws = new WebSocket(process.env.WS_SERVER as string, { agent });
 
-});
+  ws.on("open", () => {
+    console.log("WebSocket connected");
+  });
 
+  ws.on("message", (data) => {
+    try {
+      const parsed = JSON.parse(data.toString());
+      main(parsed);
+    } catch (err) {
+      console.error("Invalid data received", err);
+    }
+  });
 
+  ws.on("close", (code) => {
+    console.warn(`WebSocket closed . reconnecting...`);
+    reconnect();
+  });
 
+  ws.on("error", (err) => {
+    console.error("WebSocket error:", err);
+    ws.close();
+  });
+}
+
+function reconnect(delay = 2000) {
+  setTimeout(() => {
+    console.log("Attempting to reconnect...");
+    wsConnection();
+  }, delay);
+}
+
+wsConnection();
 const currentRegion = process.env.Region;
-
 
 async function main(data: any) {
   console.log("🚀 ~ main ~ data:", data);
@@ -59,4 +77,3 @@ async function main(data: any) {
 
   await addToDb(finalData);
 }
-
