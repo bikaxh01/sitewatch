@@ -9,19 +9,21 @@ import { sendResponse, STATUS } from "./utils/response";
 import cookieParser from "cookie-parser";
 
 config();
-const PORT = process.env.PORT ;
+const PORT = process.env.PORT;
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
 
-
 const corsOptions = {
   origin: "*",
   credentials: true,
- 
 };
-app.use(cors());
 
+app.use(
+  cors({
+    origin: "http://135.235.232.36",
+  })
+);
 
 app.use("/api/user", userRoute);
 app.use("/api/url", urlRoute);
