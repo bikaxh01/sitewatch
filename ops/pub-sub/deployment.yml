@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sitewatch-pub-sub
+  namespace: sitewatch
+spec:
+  selector:
+    matchLabels:
+      app: pub-sub
+  template:
+    metadata:
+      labels:
+        app: pub-sub
+    spec:
+      containers:
+        - name: pub-sub
+          image: bikaxh01/sitewatch-pub-sub:v1
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pub-sub-svc
+  namespace: sitewatch
+spec:
+  selector:
+    app: pub-sub
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP

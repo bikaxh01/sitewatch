@@ -25,9 +25,19 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: client
+            name: client-service
             port:
               number: 3000
+  - host: ws.sitewatch.tech
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: pub-sub-svc
+            port:
+              number: 8080
   tls:
   - hosts:
     - be.sitewatch.tech 
