@@ -19,11 +19,7 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(
-  cors({
-    origin: "http://135.235.232.36",
-  })
-);
+app.use(cors());
 
 app.use("/api/user", userRoute);
 app.use("/api/url", urlRoute);
