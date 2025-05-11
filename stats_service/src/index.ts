@@ -21,7 +21,7 @@ function wsConnection() {
       const parsed = JSON.parse(data.toString());
       main(parsed);
     } catch (err) {
-      console.error("Invalid data received", err);
+      console.error("Invalid data received", );
     }
   });
 
