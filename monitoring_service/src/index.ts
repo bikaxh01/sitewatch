@@ -22,7 +22,7 @@ const worker = new Worker(
     console.log("🚀 ~ urlData:", urlData);
 
     try {
-      console.log("Checking for URL ", urlData);
+     
 
       const finalStatus: NetworkCheckResponse = await checkUrl(
         urlData.domain,
@@ -37,11 +37,9 @@ const worker = new Worker(
             `${process.env.URL_SERVICE_URL}/url/internal/update-status?urlId=${urlData.id}&status=${currentStatus}`
           );
 
-          console.log(
-            `Updating url status ${urlData.id} to ${currentStatus} 🟢`
-          );
+       
         } catch (error) {
-          console.log("🚀 ~ main ~ error:", error);
+          
           console.log(
             `failed to updating url status ${urlData.id} to ${currentStatus} 🔴`
           );
@@ -53,18 +51,18 @@ const worker = new Worker(
         ) {
           //send alert
           //send alert
-          console.log("Alert your site is Down");
+         
           await sendNotification(currentStatus, urlData.domain, urlData.id);
           // create incident
           try {
             const path = await takeScreenShort("https://google.com/", "123456");
             const imageUrl = await uploadImage(path);
-            console.log("🚀 ~ main ~ imageUrl:", imageUrl);
+        
             const res = await axios.post(
               `${process.env.URL_SERVICE_URL}/url/internal/create-incident`,
               { urlId: urlData.id, startTime: new Date(),imageUrl }
             );
-            console.log(`Created Incident for ${res.data.data.id} 🟢`);
+           
           } catch (error) {
             console.log(` Error while Created Incident   🔴`);
           }
@@ -77,11 +75,11 @@ const worker = new Worker(
               `${process.env.URL_SERVICE_URL}/url/internal/update-incident`,
               { urlId: urlData.id, endTime: new Date() }
             );
-            console.log(`updating Incident for ${urlData.id} 🟢`);
+          
           } catch (error) {
             console.log(` Error while updating Incident   🔴`);
           }
-          console.log("Alert your site is UP now");
+          
         }
       }
 
