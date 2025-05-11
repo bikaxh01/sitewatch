@@ -278,7 +278,7 @@ export const getMonitor = async (req: Request, res: Response) => {
       monitorDetails: monitor,
       status: monitor.status,
       incidentCount: monitor._count.Incident,
-      lastChecked: lastCheck ? monitor._count.Incident : Date.now(),
+      lastChecked: lastCheck ? lastCheck.time : Date.now(),
     };
 
     return sendResponse(res, STATUS.SUCCESS, "Successfully fetched", resData);
@@ -321,7 +321,7 @@ export const getMonitorStatus = async (req: Request, res: Response) => {
     const resData = {
       status: monitorStatus.status,
       incidentCount: monitorStatus._count.Incident,
-      lastChecked: lastCheck.created_at,
+      lastChecked: lastCheck.time,
     };
 
     return sendResponse(res, STATUS.SUCCESS, "Successfully fetched", resData);

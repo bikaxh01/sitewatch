@@ -15,16 +15,18 @@ const client = new InfluxDBClient({
 
 export async function lastChecked(urlId: string) {
   const query = `
-    SELECT * FROM "monitoring_stats"
-    WHERE "urlId" = '${urlId}' AND time >= now() - interval '24 hours'
-    ORDER BY time DESC
-    LIMIT 1
-  `;
-  const data = await client.query(query, bucket);
+      SELECT * FROM "monitoring_stats"
+  WHERE "urlId" = '${urlId}'
+  ORDER BY time DESC
+  LIMIT 1
+    `;
 
-  for await (const row of data) {
-    return row;
-  }
+  // const data = await client.query(query, bucket);
+
+  // for await (const row of data) {
+  //   return row;
+  // }
+  return { time: Date.now() };
 }
 
 export async function getUrlStat(urlId: string) {
