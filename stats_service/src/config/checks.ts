@@ -12,7 +12,7 @@ export interface StatsResponse {
 
 export async function getStats(url: string): Promise<StatsResponse> {
   if (process.env.ENV === "PROD") {
-    console.log(`checking ping for ${url} in PROD`);
+   
 
     return new Promise((resolve, reject) => {
       exec(
@@ -41,7 +41,7 @@ export async function getStats(url: string): Promise<StatsResponse> {
             resolve(response);
           } else {
             const parsedResponse = JSON.parse(stdOut);
-            console.log("🚀 ~ returnnewPromise ~ parsedResponse:", parsedResponse)
+           
             // parse response extract stats conver to milisecond
             const finalResponse: StatsResponse = {
               name_lookup: secondToMillisecond(parsedResponse.name_lookup),

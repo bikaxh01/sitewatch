@@ -47,7 +47,7 @@ wsConnection();
 const currentRegion = process.env.Region;
 
 async function main(data: any) {
-  console.log("🚀 ~ main ~ data:", data);
+  console.log("🚀 ~ Received Data:", data);
   if (!data) {
     console.log("No data received.");
     return;
