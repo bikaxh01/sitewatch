@@ -1,3 +1,4 @@
+import { logger } from "./logger";
 import WebSocket, { WebSocketServer } from "ws";
 
 const wss = new WebSocketServer({ port: 8080 });
@@ -6,7 +7,7 @@ wss.on("connection", function connection(ws) {
   ws.on("error", console.error);
 
   //@ts-ignore
-  console.log("User connected");
+  logger.info("User connected");
 
   ws.on("message", function message(data, isBinary) {
     wss.clients.forEach(function each(client) {
