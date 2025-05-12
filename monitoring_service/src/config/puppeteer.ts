@@ -14,6 +14,7 @@ export async function takeScreenShort(url: string, urlId: string) {
       path,
     });
   } catch (error: any) {
+    console.log("🚀 ~ takeScreenShort ~ error:", error)
     const fallbackHtml = `
       <html>
         <body style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;background:#ffe6e6;color:#990000;">

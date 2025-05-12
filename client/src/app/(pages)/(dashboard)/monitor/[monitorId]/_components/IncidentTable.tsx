@@ -26,7 +26,6 @@ export interface Incident {
 
 function IncidentTable({ monitorId }: { monitorId: string }) {
   const [incidents, setIncidents] = useState<Incident[] | []>([]);
- 
 
   useEffect(() => {
     const getIncidents = async () => {
@@ -84,5 +83,35 @@ function IncidentTable({ monitorId }: { monitorId: string }) {
     </div>
   );
 }
+
+//  <Table>
+//           <TableHeader>
+//             <TableRow>
+//               <TableHead className="w-[100px]">ID</TableHead>
+//               <TableHead>Start Time</TableHead>
+//               <TableHead>End Time</TableHead>
+//               <TableHead>Duration</TableHead>
+//             </TableRow>
+//           </TableHeader>
+//           <TableBody>
+//             {incidents.map((incident, index) => (
+//               <TableRow key={incident.id} className="  hover:bg-gray-900 ">
+//                 <TableCell className="font-medium">{index + 1}</TableCell>
+
+//                 <TableCell>
+//                   {" "}
+//                   {(incident.startTime &&
+//                     timestampFormatter(incident.startTime)) ||
+//                     "ON-GOING"}
+//                 </TableCell>
+//                 <TableCell>
+//                   {(incident.endTime && timestampFormatter(incident.endTime)) ||
+//                     "ON-GOING"}
+//                 </TableCell>
+//                 <TableCell>{incident.duration || "ON-GOING"}</TableCell>
+//               </TableRow>
+//             ))}
+//           </TableBody>
+//         </Table>
 
 export default IncidentTable;

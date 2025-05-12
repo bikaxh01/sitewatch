@@ -12,6 +12,7 @@ import { pushToStats } from "./config/statsConfig";
 import { takeScreenShort } from "./config/puppeteer";
 import { uploadImage } from "./config/cloudinary";
 import { logger } from "./config/logs";
+import { url } from "inspector";
 
 config();
 
@@ -51,8 +52,11 @@ const worker = new Worker(
           await sendNotification(currentStatus, urlData.domain, urlData.id);
           // create incident
           try {
-            const path = await takeScreenShort("https://google.com/", "123456");
+
+            logger.warn(`CRATING INCIDENT FOR ${urlData.id} `)
+            const path = await takeScreenShort(urlData.url, urlData.id);
             const imageUrl = await uploadImage(path);
+            console.log("🚀 ~ imageUrl:", imageUrl)
 
             const res = await axios.post(
               `${process.env.URL_SERVICE_URL}/url/internal/create-incident`,

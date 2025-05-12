@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { RegionSelector } from "./SelectRegion";
 
 const chartConfig = {
   tls_handshake: {
@@ -40,9 +41,9 @@ const chartConfig = {
 export default function ChartComponent({ monitorId }: { monitorId: string }) {
   const [stats, setStats] = useState([]);
   const [selectedDays, setSelectedDays] = useState("24h");
-  const [selectedRegion, setSelectedRegion] = useState("Europe");
- console.log("Hel");
- 
+  const [selectedRegion, setSelectedRegion] = useState("ASIA (JAPAN)");
+  console.log("Hel");
+
   useEffect(() => {
     const getStats = async () => {
       try {
@@ -58,15 +59,23 @@ export default function ChartComponent({ monitorId }: { monitorId: string }) {
       }
     };
     getStats();
-  }, []);
+  }, [selectedRegion]);
+
+  const handleSelectRegion = (value: string) => {
+    setSelectedRegion(value);
+  };
   return (
     <Card className="  300 max-h-full  !rounded-md">
-      <CardHeader>
-        <CardTitle>Area Chart - Stacked</CardTitle>
-        <CardDescription>
-          Showing total visitors for the last 6 months
-        </CardDescription>
-      </CardHeader>
+      <div className=" flex justify-between  mr-2">
+        <CardHeader>
+          <CardTitle>Latency</CardTitle>
+        </CardHeader>
+        <RegionSelector
+          selectedRegion={selectedRegion}
+          handleSelect={handleSelectRegion}
+        />
+      </div>
+
       <CardContent>
         <ChartContainer
           config={chartConfig}
