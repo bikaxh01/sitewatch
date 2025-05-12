@@ -21,31 +21,41 @@ export async function lastChecked(urlId: string) {
   LIMIT 1
     `;
 
-  // const data = await client.query(query, bucket);
+  const data = await client.query(query, bucket);
 
-  // for await (const row of data) {
-  //   return row;
-  // }
-  return { time: Date.now() };
+  for await (const row of data) {
+    return row;
+  }
 }
 
-export async function getUrlStat(urlId: string) {
+export interface StatsParams {
+  urlId: string;
+  days: "24h" | "30d" | "7d";
+  region: "Europe" | "ASIA (JAPAN)";
+}
+
+export async function getUrlStat({ days, region, urlId }: StatsParams) {
   const query = `
   SELECT * FROM "monitoring_stats"
-  WHERE "urlId" = '${urlId}' AND time >= now() - interval '24 hours'
+  WHERE "urlId" = '${urlId}'  AND "region" = '${region}'  AND time >= now() - interval '${days}'
+  ORDER BY time DESC
 `;
+
   const data = await client.query(query, bucket);
   const statsData = [];
 
   for await (const row of data) {
     const formattedRow = {
-      time: formatTime(row.time),
-      max: row.ping_max,
-      avg: row.ping_avg,
+      time: row.time,
+      data_transfer: row.data_transfer,
+      name_lookup: row.name_lookup,
+      region: row.region,
+      tcp_connection: row.tcp_connection,
+      tls_handshake: row.tls_handshake,
+      total_time: row.total_time,
     };
 
     statsData.push(formattedRow);
-    // Access each row in the result.
   }
 
   return statsData;

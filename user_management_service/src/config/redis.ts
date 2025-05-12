@@ -10,12 +10,12 @@ redisClient.on("error", (error) => {
   logger.error("🚀 ~ redisClient.on ~ error:", error);
 });
 
-(async () => {
-  try {
-    redisClient.connect();
-  } catch (error) {
-    logger.error("🚀 ~ error:", error);
-  }
-})();
+// (async () => {
+//   try {
+//     redisClient.connect();
+//   } catch (error) {
+//     logger.error("🚀 ~ error:", error);
+//   }
+// })();
 
 export { redisClient };
