@@ -41,7 +41,8 @@ export default function ChartComponent({ monitorId }: { monitorId: string }) {
   const [stats, setStats] = useState([]);
   const [selectedDays, setSelectedDays] = useState("24h");
   const [selectedRegion, setSelectedRegion] = useState("Europe");
-
+ console.log("Hel");
+ 
   useEffect(() => {
     const getStats = async () => {
       try {
