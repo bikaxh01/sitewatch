@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: client
-          image: bikaxh01/sitewatch-client:c42cc00f56ade448688f513703ee8094f1b20a8b
+          image: bikaxh01/sitewatch-client:6450694ba0932c0561bbce7e67360f7e18b96c39
           ports:
             - containerPort: 3000
 ---
