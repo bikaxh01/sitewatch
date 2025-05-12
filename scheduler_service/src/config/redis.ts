@@ -3,12 +3,13 @@ import { log } from "console";
 import { config } from "dotenv";
 
 import { createClient } from "redis";
+import { logger } from "./logger";
 config();
 
 const redisClient = createClient({ url: process.env.REDIS_URL });
 
 redisClient.on("error", (error) => {
-  console.log("ERROR WHILE CONNECTING TO REDIS 🔴🔴");
+  logger.error("ERROR WHILE CONNECTING TO REDIS 🔴🔴");
 });
 
 (async () => {
@@ -20,7 +21,7 @@ const getMonitoringUrls = async () => {
     BY: "SCORE",
   });
 
-  console.log("🚀 ~ getMonitoringUrls ~ urls:", urls);
+  logger.info("🚀 ~ getMonitoringUrls ~ urls:", urls);
 
   //   if (urls.length > 0) {
 

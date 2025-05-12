@@ -1,36 +1,27 @@
 import cron from "node-cron";
 import { pushToBullMQ } from "./config/BullMq";
 import { getMonitoringUrls, redisClient, syncRedisToDb } from "./config/redis";
+import { logger } from "./config/logger";
 
 async function main() {
-  //get urls ...
-
-console.log("v3")
   const monitoringUrls = await getMonitoringUrls();
 
   if (monitoringUrls.length <= 0) {
-    console.log("Retuning back");
+    logger.info("No url founds");
 
     return null;
   }
 
   // send each to kafka because we have to do with kafka
 
-  
   for (const url of monitoringUrls) {
-    
- 
     pushToBullMQ(url);
 
     await redisClient.zRem("monitoring:urls", url);
   }
-
-  console.log("Pushed all messages");
 }
 
 cron.schedule("*/30 * * * * *", () => {
-
-
   main();
 });
 

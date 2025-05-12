@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import { Queue } from "bullmq";
+import { logger } from "./logger";
 config();
 
 const monitoringService = new Queue("Monitoring", {
@@ -10,9 +11,8 @@ const monitoringService = new Queue("Monitoring", {
 });
 
 async function pushToBullMQ(data: string) {
-  // Add job with the name of the queue already defined
   await monitoringService.add("MonitoringUrl", data);
-  console.log("Pushed");
+  logger.info("Pushed");
 }
 
 export { pushToBullMQ };
