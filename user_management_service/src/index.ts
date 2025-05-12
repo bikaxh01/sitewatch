@@ -7,6 +7,7 @@ import { urlRoute } from "./routes/url.route";
 import { userRoute } from "./routes/user.route";
 import { sendResponse, STATUS } from "./utils/response";
 import cookieParser from "cookie-parser";
+import { logger } from "./config/log";
 
 config();
 const PORT = process.env.PORT;
@@ -36,4 +37,7 @@ app.get("/", (req: Request, res: Response) => {
   return sendResponse(res, STATUS.SUCCESS, "All Good v4 ready", []);
 });
 
-app.listen(PORT, () => console.log(`Running at ${PORT} 🟢`));
+app.listen(PORT, () => {
+  logger.info( `server started ${PORT} 🟢`);
+ 
+});

@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 import { prisma } from "../config/db";
 import { rateLimit } from "express-rate-limit";
+import { logger } from "../config/log";
 
 config();
 
@@ -44,7 +45,7 @@ export async function validateUser(
     next();
   } catch (error) {
     res.clearCookie("authToken");
-    console.log("🚀 ~ error:", error);
+    logger.error("🚀 ~ error:", error);
     return sendResponse(res, STATUS.UNAUTHORIZED, "Unauthorized user");
   }
 }
@@ -57,11 +58,11 @@ const limiterInstance = rateLimit({
 });
 
 export async function limiter(req: Request, res: Response, next: NextFunction) {
-  console.log("🚀 ~ limiter ~ req:", req.ip);
+
   try {
     limiterInstance(req, res, next);
   } catch (error) {
-    console.log("🚀 ~ limiter ~ error:", error);
+    logger.error("🚀 ~ limiter ~ error:", error);
     res.status(429).json({ message: "Too many requests" });
   }
 }

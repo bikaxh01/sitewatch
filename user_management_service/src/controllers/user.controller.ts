@@ -6,13 +6,14 @@ import { sendResponse, STATUS } from "../utils/response";
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 import { Resend } from "resend";
+import { logger } from "../config/log";
 
 config();
 const passwordSalt = bcrypt.genSaltSync(10);
 
 export async function emailSignup(req: Request, res: Response) {
   const { email, password, firstName, signUpType, lastName } = req.body;
-  console.log(req.body);
+ 
 
   try {
     // check user email
@@ -70,7 +71,7 @@ export async function emailSignup(req: Request, res: Response) {
 
     return sendResponse(res, STATUS.CREATED, "User created", user);
   } catch (error) {
-    console.log("🚀 ~ emailSignup ~ error:", error);
+    logger.error("🚀 ~ emailSignup ~ error:", error);
     return sendResponse(
       res,
       STATUS.INTERNAL_ERROR,
@@ -128,7 +129,7 @@ export async function emailSignIn(req: Request, res: Response) {
 
     return sendResponse(res, STATUS.SUCCESS, "successfully signed In");
   } catch (error) {
-    console.log("🚀 ~ emailSignIn ~ error:", error);
+    logger.error("🚀 ~ emailSignIn ~ error:", error);
     sendResponse(res, STATUS.INTERNAL_ERROR, "something went wrong");
   }
 }
@@ -224,7 +225,7 @@ export async function getAllUser(req: Request, res: Response) {
 
     return sendResponse(res, STATUS.SUCCESS, "successfully", user);
   } catch (error) {
-    console.log("🚀 ~ getAllUser ~ error:", error);
+    logger.error("🚀 ~ getAllUser ~ error:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 }
@@ -236,7 +237,7 @@ export async function logoutUser(req: Request, res: Response) {
       success: true,
     });
   } catch (error) {
-    console.log("🚀 ~ LogoutUser ~ error:", error);
+    logger.error("🚀 ~ LogoutUser ~ error:", error);
     res.status(500).json({
       message: "Internal server error",
       success: false,
@@ -284,7 +285,7 @@ export async function forgetPassword(req: Request, res: Response) {
     });
     return sendResponse(res, STATUS.SUCCESS, "Otp Send Successfully");
   } catch (error) {
-    console.log("🚀 ~ updateUser ~ error:", error);
+    logger.error("🚀 ~ updateUser ~ error:", error);
     return sendResponse(res, STATUS.INTERNAL_ERROR, "Something went wrong");
   }
 }
@@ -327,7 +328,7 @@ export async function verifyOpt(req: Request, res: Response) {
     });
     return sendResponse(res, STATUS.SUCCESS, "Opt match Successfully");
   } catch (error) {
-    console.log("🚀 ~ verifyOpt ~ error:", error);
+    logger.error("🚀 ~ verifyOpt ~ error:", error);
   }
 }
 
@@ -354,7 +355,7 @@ export async function changePassword(req: Request, res: Response) {
 
     return sendResponse(res, STATUS.SUCCESS, "Password Successfully Changed");
   } catch (error) {
-    console.log("🚀 ~ changePassword ~ error:", error);
+    logger.error("🚀 ~ changePassword ~ error:", error);
   }
 }
 
@@ -384,7 +385,7 @@ export async function signupVerifyEmail(req: Request, res: Response) {
       },
     });
   } catch (error) {
-    console.log("🚀 ~ const-verifyEmail ~ error:", error);
+    logger.error("🚀 ~ const-verifyEmail ~ error:", error);
   }
 }
 
@@ -431,7 +432,7 @@ export async function changeEmail(req: Request, res: Response) {
       "Otp Send Successfully to change email"
     );
   } catch (error) {
-    console.log("🚀 ~ updateUser ~ error:", error);
+    logger.error("🚀 ~ updateUser ~ error:", error);
     return sendResponse(res, STATUS.INTERNAL_ERROR, "Something went wrong");
   }
 }
@@ -486,6 +487,6 @@ export async function changeEmailOptVerify(req: Request, res: Response) {
 
     return sendResponse(res, STATUS.SUCCESS, "Opt match Successfully");
   } catch (error) {
-    console.log("🚀 ~ changeEmailOptVerify ~ error:", error);
+    logger.error("🚀 ~ changeEmailOptVerify ~ error:", error);
   }
 }

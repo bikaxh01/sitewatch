@@ -1,11 +1,12 @@
 import { Request, response, Response } from "express";
-import { checkStatus } from "../utils/checkStatus";
+
 import { sendResponse, STATUS } from "../utils/response";
 import { formatTime, prisma } from "../config/db";
 import { redisClient } from "../config/redis";
 import { urlStatus } from "@prisma/client";
 
 import { getUrlStat, lastChecked } from "../config/influx";
+import { logger } from "../config/log";
 
 export async function registerMonitor(req: Request, res: Response) {
   const { userId, url, monitorName, checkInterval } = req.body;
@@ -121,7 +122,7 @@ export async function createIncident(req: Request, res: Response) {
       createIncident
     );
   } catch (error) {
-    console.log("🚀 ~ createIncident ~ error:", error);
+    logger.error("🚀 ~ createIncident ~ error:", error);
     return sendResponse(
       res,
       STATUS.INTERNAL_ERROR,
@@ -194,7 +195,7 @@ export async function getAllUrls(req: Request, res: Response) {
       urlsToBeChecked
     );
   } catch (error) {
-    console.log("🚀 ~ getAllUrls ~ error:", error);
+    logger.error("🚀 ~ getAllUrls ~ error:", error);
     return sendResponse(res, STATUS.INTERNAL_ERROR, "something went wrong");
   }
 }
@@ -223,7 +224,7 @@ export async function getAllIncident(req: Request, res: Response) {
     }
     return sendResponse(res, STATUS.SUCCESS, "successfully", monitor);
   } catch (error) {
-    console.log("🚀 ~ getAllIncident ~ error:", error);
+    logger.error("🚀 ~ getAllIncident ~ error:", error);
     return sendResponse(res, STATUS.INTERNAL_ERROR, "something went wrong");
   }
 }
@@ -283,7 +284,7 @@ export const getMonitor = async (req: Request, res: Response) => {
 
     return sendResponse(res, STATUS.SUCCESS, "Successfully fetched", resData);
   } catch (error) {
-    console.log("🚀 ~ getMonitor ~ error:", error)
+    logger.error("🚀 ~ getMonitor ~ error:", error)
     return sendResponse(res, STATUS.INTERNAL_ERROR, "something went wrong");
   }
 };
@@ -368,7 +369,7 @@ export const getMonitorStats = async (req: Request, res: Response) => {
 
     return sendResponse(res, STATUS.SUCCESS, "Successfully fetched", data);
   } catch (error) {
-    console.log("🚀 ~ getUrlstata ~ error:", error);
+    logger.error("🚀 ~ getUrlstata ~ error:", error);
     return sendResponse(res, STATUS.INTERNAL_ERROR, "something went wrong");
   }
 };
@@ -409,7 +410,7 @@ export const getAllIncidents = async (req: Request, res: Response) => {
       finalIncidents
     );
   } catch (error) {
-    console.log("🚀 ~ getAllIncidents ~ error:", error);
+    logger.error("🚀 ~ getAllIncidents ~ error:", error);
     return sendResponse(res, STATUS.INTERNAL_ERROR, "something went wrong");
   }
 };
