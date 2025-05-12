@@ -6,7 +6,7 @@ import React from "react";
 
 const NavComponent = () => {
   return (
-    <div className="flex items-center justify-between fixed top-0  right-0 left-0 z-20   backdrop-filter backdrop-blur-sm bg-opacity-40   max-w-7xl mx-auto">
+    <div className="flex items-center justify-between fixed top-5 rounded-full pr-2 py-2  right-0 left-0 z-20   backdrop-filter backdrop-blur-sm bg-opacity-40   max-w-7xl mx-auto">
       <div className="flex  items-center  justify-between gap-4 py-4  text-md">
         <a href="/" className="text-lg font-bold">
           Sitewatch.
