@@ -15,14 +15,26 @@ function wsConnection() {
 
   ws.on("open", () => {
     logger.info("WebSocket connected");
+
+    const pingInterval = setInterval(() => {
+      console.log("Sending ping to all connected clients...");
+      ws.send("ping");
+    }, 30000);
   });
 
   ws.on("message", (data) => {
+    console.log("🚀 ~ ws.on ~ data:", data.toString());
+
+    const msg = data.toString();
+    if (msg == "pong") {
+      console.log("🚀 ~ ws.on ~ pong:", msg);
+    }
+
     try {
       const parsed = JSON.parse(data.toString());
       main(parsed);
     } catch (err) {
-      logger.error("Invalid data received" );
+      logger.error("Invalid data received");
     }
   });
 
@@ -74,7 +86,6 @@ async function main(data: any) {
     url: url,
     urlId: urlId,
   };
- 
 
   await addToDb(finalData);
 }

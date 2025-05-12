@@ -13,7 +13,6 @@ export interface StatsResponse {
 
 export async function getStats(url: string): Promise<StatsResponse> {
   if (process.env.ENV === "PROD") {
-   
 
     return new Promise((resolve, reject) => {
       exec(
@@ -41,6 +40,7 @@ export async function getStats(url: string): Promise<StatsResponse> {
             };
             resolve(response);
           } else {
+            console.log("🚀 ~ exec ~ stdOut:");
             const parsedResponse = JSON.parse(stdOut);
            
             const finalResponse: StatsResponse = {
