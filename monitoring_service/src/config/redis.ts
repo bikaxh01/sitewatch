@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import { createClient } from "redis";
+import { logger } from "./logs";
 
 config();
 
@@ -8,12 +9,12 @@ const redisClient = createClient({ url: process.env.REDIS_URL });
 
 redisClient.on("error", (error) => {
  
-  console.log("ERROR WHILE CONNECTING REDIS 🔴🔴");
+  logger.error("ERROR WHILE CONNECTING REDIS 🔴🔴");
 });
 
 (async () => {
   redisClient.connect();
-  console.log("Redis connected 🟢🟢 ");
+  logger.info("Redis connected 🟢🟢 ");
   
 })();
 

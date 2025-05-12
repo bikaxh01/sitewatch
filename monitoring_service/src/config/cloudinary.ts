@@ -1,6 +1,7 @@
 import cloudinary from "cloudinary";
 import { config } from "dotenv";
 import fs from "fs";
+import { logger } from "./logs";
 config();
 cloudinary.v2.config({
   secure: true,
@@ -16,10 +17,10 @@ export async function uploadImage(path: string) {
   };
 
   try {
-    // Upload the image
+ 
     const result = await cloudinary.v2.uploader.upload(path, options);
 
-    fs.unlink(path, () => console.log(`deleted file ${path}`));
+    fs.unlink(path, () => logger.info(`deleted file ${path}`));
     return result.secure_url;
   } catch (error) {
     console.error(error);

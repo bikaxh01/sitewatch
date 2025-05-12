@@ -11,6 +11,7 @@ import { Worker } from "bullmq";
 import { pushToStats } from "./config/statsConfig";
 import { takeScreenShort } from "./config/puppeteer";
 import { uploadImage } from "./config/cloudinary";
+import { logger } from "./config/logs";
 
 config();
 
@@ -19,11 +20,9 @@ const worker = new Worker(
   async (job) => {
     const { data } = job;
     const urlData = JSON.parse(data);
-    console.log("🚀 ~ urlData:", urlData);
+    logger.info("URL DATA RECEIVED:", urlData);
 
     try {
-     
-
       const finalStatus: NetworkCheckResponse = await checkUrl(
         urlData.domain,
         urlData.url
@@ -36,11 +35,8 @@ const worker = new Worker(
           const res = await axios.patch(
             `${process.env.URL_SERVICE_URL}/url/internal/update-status?urlId=${urlData.id}&status=${currentStatus}`
           );
-
-       
         } catch (error) {
-          
-          console.log(
+          logger.error(
             `failed to updating url status ${urlData.id} to ${currentStatus} 🔴`
           );
         }
@@ -51,20 +47,19 @@ const worker = new Worker(
         ) {
           //send alert
           //send alert
-         
+
           await sendNotification(currentStatus, urlData.domain, urlData.id);
           // create incident
           try {
             const path = await takeScreenShort("https://google.com/", "123456");
             const imageUrl = await uploadImage(path);
-        
+
             const res = await axios.post(
               `${process.env.URL_SERVICE_URL}/url/internal/create-incident`,
-              { urlId: urlData.id, startTime: new Date(),imageUrl }
+              { urlId: urlData.id, startTime: new Date(), imageUrl }
             );
-           
           } catch (error) {
-            console.log(` Error while Created Incident   🔴`);
+            logger.error(` Error while Created Incident   🔴`);
           }
         } else if (urlData.status == "DOWN" && currentStatus == "UP") {
           // send alert
@@ -75,11 +70,9 @@ const worker = new Worker(
               `${process.env.URL_SERVICE_URL}/url/internal/update-incident`,
               { urlId: urlData.id, endTime: new Date() }
             );
-          
           } catch (error) {
-            console.log(` Error while updating Incident   🔴`);
+            logger.error(` Error while updating Incident   🔴`);
           }
-          
         }
       }
 
@@ -96,7 +89,7 @@ const worker = new Worker(
 
       await pushToStats({ urlId: urlData.id, url: urlData.url });
     } catch (error) {
-      console.log("🚀 ~ main ~ error:", error);
+      logger.error("🚀 ~ main ~ error:", error);
     }
   },
   {
@@ -108,5 +101,5 @@ const worker = new Worker(
 );
 
 worker.on("error", (err) => {
-  console.error("Worker error:", err);
+  logger.error("Worker error:", err);
 });

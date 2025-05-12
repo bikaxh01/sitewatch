@@ -2,6 +2,7 @@ import { Resend } from "resend";
 import { getEmailTemplate } from "./emailTemplate";
 import axios from "axios";
 import { config } from "dotenv";
+import { logger } from "./logs";
 config();
 export async function sendNotification(
   currentStatus: "UP" | "DOWN",
@@ -42,8 +43,8 @@ async function sendEmail(
   });
 
   if (error) {
-    console.log({ error });
+    logger.error({ error });
   }
 
-  console.log({ data });
+
 }

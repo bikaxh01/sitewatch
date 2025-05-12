@@ -2,6 +2,7 @@ import { config } from "dotenv";
 import WebSocket from "ws";
 config();
 import https from "https";
+import { logger } from "./logs";
 
 
 
@@ -12,7 +13,7 @@ export async function pushToStats(data: { urlId: string; url: string }) {
 
 
   const ws = new WebSocket(process.env.WS_SERVER as string, { agent });
-  console.log("Pushed to queue ", data.urlId);
+  logger.info("Pushed to queue ", data.urlId);
 
   
   ws.onopen = () => {
@@ -21,6 +22,6 @@ export async function pushToStats(data: { urlId: string; url: string }) {
   };
 
   ws.onerror = () => {
-    console.log("🚀 ~ pushToStats ~ error:");
+    logger.error("🚀 ~ pushToStats ~ error:");
   };
 }
