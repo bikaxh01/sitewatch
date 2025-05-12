@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ws-ingress
+  namespace: sitewatch
+  annotations:
+    cert-manager.io/cluster-issuer: be-issuer
+    nginx.ingress.kubernetes.io/websocket-services: pub-sub-svc
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/backend-protocol: WS
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: ws.sitewatch.tech
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: pub-sub-svc
+            port:
+              number: 8080
+  tls:
+  - hosts:
+    - ws.sitewatch.tech 
+    secretName: letsencrypt-prod
