@@ -1,6 +1,7 @@
 import { exec } from "child_process";
 import { StatsData } from "./db";
 import { config } from "dotenv";
+import { logger } from "./logger";
 config();
 export interface StatsResponse {
   name_lookup: number;
@@ -19,7 +20,7 @@ export async function getStats(url: string): Promise<StatsResponse> {
         `curl -s -w '{"name_lookup": "%{time_namelookup}", "tcp_connection": "%{time_connect}", "tls_handshake": "%{time_appconnect}", "start_transfer": "%{time_starttransfer}", "total_time": "%{time_total}"}' -o /dev/null ${url} | jq .`,
         (error, stdOut, stdErr) => {
           if (error) {
-            console.log("🚀 ~ exec ~ error:", error);
+            logger.info("🚀 ~ exec ~ error:", error);
 
             const response: StatsResponse = {
               name_lookup: 0.0,
@@ -30,7 +31,7 @@ export async function getStats(url: string): Promise<StatsResponse> {
             };
             resolve(response);
           } else if (stdErr) {
-            console.log("🚀 ~ exec ~ stdErr:", stdErr);
+            logger.info("🚀 ~ exec ~ stdErr:", stdErr);
             const response: StatsResponse = {
               name_lookup: 0.0,
               start_transfer: 0.0,
@@ -42,7 +43,6 @@ export async function getStats(url: string): Promise<StatsResponse> {
           } else {
             const parsedResponse = JSON.parse(stdOut);
            
-            // parse response extract stats conver to milisecond
             const finalResponse: StatsResponse = {
               name_lookup: secondToMillisecond(parsedResponse.name_lookup),
               start_transfer: secondToMillisecond(
@@ -62,7 +62,7 @@ export async function getStats(url: string): Promise<StatsResponse> {
     });
   } else {
     // while running in local
-    console.log(`checking ping for ${url} in Dev`);
+    logger.warn(`checking ping for ${url} in Dev`);
     return {
       name_lookup: 0.148957,
       tcp_connection: 0.150128,

@@ -3,6 +3,7 @@ import { getStats } from "./config/checks";
 import { addToDb, StatsData } from "./config/db";
 import WebSocket from "ws";
 import https from "https";
+import { logger } from "./config/logger";
 
 const agent = new https.Agent({
   rejectUnauthorized: false,
@@ -13,7 +14,7 @@ function wsConnection() {
   const ws = new WebSocket(process.env.WS_SERVER as string, { agent });
 
   ws.on("open", () => {
-    console.log("WebSocket connected");
+    logger.info("WebSocket connected");
   });
 
   ws.on("message", (data) => {
@@ -21,24 +22,24 @@ function wsConnection() {
       const parsed = JSON.parse(data.toString());
       main(parsed);
     } catch (err) {
-      console.error("Invalid data received", );
+      logger.error("Invalid data received" );
     }
   });
 
   ws.on("close", (code) => {
-    console.warn(`WebSocket closed . reconnecting...`);
+    logger.warn(`WebSocket closed . reconnecting...`);
     reconnect();
   });
 
   ws.on("error", (err) => {
-    console.error("WebSocket error:", err);
+    logger.error("WebSocket error:", err);
     ws.close();
   });
 }
 
 function reconnect(delay = 2000) {
   setTimeout(() => {
-    console.log("Attempting to reconnect...");
+    logger.info("Attempting to reconnect...");
     wsConnection();
   }, delay);
 }
@@ -47,7 +48,7 @@ wsConnection();
 const currentRegion = process.env.Region;
 
 async function main(data: any) {
-  console.log("🚀 ~ Received Data:", data);
+  logger.info("🚀 ~ Received Data:", data);
   if (!data) {
     console.log("No data received.");
     return;
@@ -73,7 +74,7 @@ async function main(data: any) {
     url: url,
     urlId: urlId,
   };
-  console.log("🚀 ~ main ~ finalData:", finalData);
+ 
 
   await addToDb(finalData);
 }

@@ -1,5 +1,6 @@
 import { InfluxDBClient, Point } from "@influxdata/influxdb3-client";
 import { config } from "dotenv";
+import { logger } from "./logger";
 config();
 
 const token = process.env.INFLUXDB_TOKEN;
@@ -43,6 +44,6 @@ export async function addToDb({
 
     client.close();
   } catch (error) {
-    console.log("🚀 ~ error:", error);
+    logger.error("🚀 while pushing to db:", error);
   }
 }
