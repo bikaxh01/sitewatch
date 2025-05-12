@@ -21,6 +21,7 @@ async function main() {
   }
 }
 
+
 cron.schedule("*/30 * * * * *", () => {
   main();
 });
