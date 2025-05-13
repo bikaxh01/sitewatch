@@ -1,7 +1,7 @@
 "use client";
 
 import { TrendingUp } from "lucide-react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -21,48 +21,62 @@ import {
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { RegionSelector } from "./SelectRegion";
 
 const chartConfig = {
-  max: {
-    label: "Max ping",
+  tls_handshake: {
+    label: "TLS handshake",
     color: "hsl(var(--chart-1))",
   },
-  avg: {
-    label: "Avg Ping",
+  name_lookup: {
+    label: "Name lookup",
     color: "hsl(var(--chart-2))",
+  },
+  data_transfer: {
+    label: "Data Transfer",
+    color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig;
 
 export default function ChartComponent({ monitorId }: { monitorId: string }) {
   const [stats, setStats] = useState([]);
+  const [selectedDays, setSelectedDays] = useState("24h");
+  const [selectedRegion, setSelectedRegion] = useState("ASIA (JAPAN)");
+  console.log("Hel");
 
   useEffect(() => {
     const getStats = async () => {
       try {
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL as string}/url/get-monitor-stats?monitorId=${monitorId}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL as string}/url/get-monitor-stats?monitorId=${monitorId}&days=${selectedDays}&region=${selectedRegion}`,
           {
             withCredentials: true,
           }
         );
         setStats(res.data.data);
       } catch (error) {
-        console.log("🚀 ~ getStats ~ error:", error)
-        
+        console.log("🚀 ~ getStats ~ error:", error);
       }
     };
-    getStats()
-  }, []);
+    getStats();
+  }, [selectedRegion]);
+
+  const handleSelectRegion = (value: string) => {
+    setSelectedRegion(value);
+  };
   return (
     <Card className="  300 max-h-full  !rounded-md">
-      <CardHeader>
-        <CardTitle>Area Chart - Stacked</CardTitle>
-        <CardDescription>
-          Showing total visitors for the last 6 months
-        </CardDescription>
-      </CardHeader>
+      <div className=" flex justify-between  mr-2">
+        <CardHeader>
+          <CardTitle>Latency</CardTitle>
+        </CardHeader>
+        <RegionSelector
+          selectedRegion={selectedRegion}
+          handleSelect={handleSelectRegion}
+        />
+      </div>
+
       <CardContent>
-       
         <ChartContainer
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
@@ -75,62 +89,43 @@ export default function ChartComponent({ monitorId }: { monitorId: string }) {
               right: 12,
             }}
           >
-            {/* <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-mobile)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-mobile)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs> */}
-            {/* <CartesianGrid vertical={false} /> */}
             <XAxis
               dataKey="time"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               minTickGap={32}
-              tickFormatter={(value) => value.slice(0)}
+              tickFormatter={(value) => timestampFormatter(value)}
             />
+
             <ChartTooltip
               cursor={false}
               content={
                 <ChartTooltipContent
-                  labelFormatter={(value) => value.slice(0)}
+                  labelFormatter={(value) => value}
                   indicator="dot"
                 />
               }
             />
             <Area
-              dataKey="max"
+              dataKey="name_lookup"
               type="natural"
               fill="url(#fillMobile)"
-              stroke="var(--color-max)"
+              stroke="var(--color-name_lookup)"
               stackId="a"
             />
             <Area
-              dataKey="avg"
+              dataKey="tls_handshake"
               type="natural"
               fill="url(#fillDesktop)"
-              stroke="var(--color-avg)"
+              stroke="var(--color-tls_handshake)"
+              stackId="a"
+            />
+            <Area
+              dataKey="data_transfer"
+              type="natural"
+              fill="url(#fillDesktop)"
+              stroke="var(--color-data_transfer)"
               stackId="a"
             />
             <ChartLegend content={<ChartLegendContent />} />
@@ -139,4 +134,19 @@ export default function ChartComponent({ monitorId }: { monitorId: string }) {
       </CardContent>
     </Card>
   );
+}
+
+export function timestampFormatter(timestamp: string) {
+  const date = new Date(timestamp);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+  const day = String(date.getDate()).padStart(2, "0");
+
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+
+  const formatted = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  return formatted; // e.g., "2025-04-20 22:26:07" (depends on local timezone)
 }

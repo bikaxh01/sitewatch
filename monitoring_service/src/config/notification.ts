@@ -22,6 +22,7 @@ export async function sendNotification(
       await sendEmail(currentStatus, user.email, domain);
     }
   } catch (error) {
+    console.log("🚀 ~ error while sending notification:", error)
     return null;
   }
 }

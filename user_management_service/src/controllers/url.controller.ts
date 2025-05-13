@@ -4,9 +4,10 @@ import { sendResponse, STATUS } from "../utils/response";
 import { formatTime, prisma } from "../config/db";
 import { redisClient } from "../config/redis";
 import { urlStatus } from "@prisma/client";
-
+import { StatsParams } from "../config/influx";
 import { getUrlStat, lastChecked } from "../config/influx";
 import { logger } from "../config/log";
+import { string } from "zod";
 
 export async function registerMonitor(req: Request, res: Response) {
   const { userId, url, monitorName, checkInterval } = req.body;
@@ -91,7 +92,7 @@ export async function updateMonitorStatus(req: Request, res: Response) {
 
 export async function createIncident(req: Request, res: Response) {
   try {
-    const { urlId, startTime,imageUrl } = req.body;
+    const { urlId, startTime, imageUrl } = req.body;
 
     if (!urlId || !startTime) {
       return sendResponse(res, STATUS.NOT_ALLOWED, "Invalid query");
@@ -111,7 +112,7 @@ export async function createIncident(req: Request, res: Response) {
       data: {
         urlId: urlId as string,
         startTime: new Date(startTime),
-        imageUrl
+        imageUrl,
       },
     });
 
@@ -273,7 +274,6 @@ export const getMonitor = async (req: Request, res: Response) => {
     }
 
     const lastCheck = await lastChecked(monitor.id);
-  
 
     const resData = {
       monitorDetails: monitor,
@@ -284,7 +284,7 @@ export const getMonitor = async (req: Request, res: Response) => {
 
     return sendResponse(res, STATUS.SUCCESS, "Successfully fetched", resData);
   } catch (error) {
-    logger.error("🚀 ~ getMonitor ~ error:", error)
+    logger.error("🚀 ~ getMonitor ~ error:", error);
     return sendResponse(res, STATUS.INTERNAL_ERROR, "something went wrong");
   }
 };
@@ -322,7 +322,7 @@ export const getMonitorStatus = async (req: Request, res: Response) => {
     const resData = {
       status: monitorStatus.status,
       incidentCount: monitorStatus._count.Incident,
-      lastChecked: lastCheck.time,
+      lastChecked: lastCheck ? lastCheck.time : Date.now(),
     };
 
     return sendResponse(res, STATUS.SUCCESS, "Successfully fetched", resData);
@@ -357,15 +357,24 @@ export const getMonitorIncidents = async (req: Request, res: Response) => {
 
 export const getMonitorStats = async (req: Request, res: Response) => {
   try {
-    const { monitorId } = req.query;
-    if (!monitorId) {
-      return sendResponse(res, STATUS.INVALID_DATA, "Invalid monitor Id");
+    const { monitorId, days, region } = req.query;
+
+    if (!monitorId || !days || !region) {
+      return sendResponse(res, STATUS.INVALID_DATA, "Invalid stats data");
     }
 
-    if (typeof monitorId !== "string") {
-      return sendResponse(res, STATUS.INVALID_DATA, "Invalid monitor Id");
+    if (
+      typeof monitorId !== "string" ||
+      typeof region !== "string" ||
+      typeof days !== "string"
+    ) {
+      sendResponse(res, STATUS.INVALID_DATA, "Invalid monitor Id");
+      return;
     }
-    const data = await getUrlStat(monitorId);
+
+    
+    //@ts-ignore
+    const data = await getUrlStat({ urlId:monitorId, days, region });
 
     return sendResponse(res, STATUS.SUCCESS, "Successfully fetched", data);
   } catch (error) {
