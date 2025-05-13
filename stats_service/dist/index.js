@@ -16,30 +16,61 @@ const dotenv_1 = require("dotenv");
 const checks_1 = require("./config/checks");
 const db_1 = require("./config/db");
 const ws_1 = __importDefault(require("ws"));
-const ws = new ws_1.default("ws://localhost:8000");
-ws.on("message", (data) => {
-    console.log("ws connected");
-    const obj = data.toString();
-    const parsedData = JSON.parse(obj);
-    console.log("🚀 ~ ws.on ~ parsedData:", parsedData);
-    main(parsedData);
+const https_1 = __importDefault(require("https"));
+const logger_1 = require("./config/logger");
+const agent = new https_1.default.Agent({
+    rejectUnauthorized: false,
 });
 (0, dotenv_1.config)();
+function wsConnection() {
+    const ws = new ws_1.default(process.env.WS_SERVER, { agent });
+    ws.on("open", () => {
+        logger_1.logger.info("WebSocket connected");
+        const pingInterval = setInterval(() => {
+            console.log("Sending ping to all connected clients...");
+            ws.send("ping");
+        }, 30000);
+    });
+    ws.on("message", (data) => {
+        console.log("🚀 ~ ws.on ~ data:", data.toString());
+        const msg = data.toString();
+        if (msg == "pong") {
+            console.log("🚀 ~ ws.on ~ pong:", msg);
+        }
+        try {
+            const parsed = JSON.parse(data.toString());
+            main(parsed);
+        }
+        catch (err) {
+            logger_1.logger.error("Invalid data received");
+        }
+    });
+    ws.on("close", (code) => {
+        logger_1.logger.warn(`WebSocket closed . reconnecting...`);
+        reconnect();
+    });
+    ws.on("error", (err) => {
+        logger_1.logger.error("WebSocket error:", err);
+        ws.close();
+    });
+}
+function reconnect(delay = 2000) {
+    setTimeout(() => {
+        logger_1.logger.info("Attempting to reconnect...");
+        wsConnection();
+    }, delay);
+}
+wsConnection();
 const currentRegion = process.env.Region;
-// subscribe topic
-// get data
-// parse data
 function main(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("🚀 ~ main ~ data:", data);
+        logger_1.logger.info("🚀 ~ Received Data:", data);
         if (!data) {
             console.log("No data received.");
             return;
         }
-        const urlId = data.data;
-        console.log("🚀 ~ main ~ urlId:", urlId);
+        const urlId = data.urlId;
         const url = data.url;
-        console.log("🚀 ~ main ~ url:", url);
         const statsResult = yield (0, checks_1.getStats)(url);
         if (!currentRegion) {
             console.log("Invalid region 🔴");

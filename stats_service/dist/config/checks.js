@@ -12,15 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getStats = getStats;
 const child_process_1 = require("child_process");
 const dotenv_1 = require("dotenv");
+const logger_1 = require("./logger");
 (0, dotenv_1.config)();
 function getStats(url) {
     return __awaiter(this, void 0, void 0, function* () {
         if (process.env.ENV === "PROD") {
-            console.log(`checking ping for ${url} in PROD`);
             return new Promise((resolve, reject) => {
                 (0, child_process_1.exec)(`curl -s -w '{"name_lookup": "%{time_namelookup}", "tcp_connection": "%{time_connect}", "tls_handshake": "%{time_appconnect}", "start_transfer": "%{time_starttransfer}", "total_time": "%{time_total}"}' -o /dev/null ${url} | jq .`, (error, stdOut, stdErr) => {
                     if (error) {
-                        console.log("🚀 ~ exec ~ error:", error);
+                        logger_1.logger.info("🚀 ~ exec ~ error:", error);
                         const response = {
                             name_lookup: 0.0,
                             start_transfer: 0.0,
@@ -31,7 +31,7 @@ function getStats(url) {
                         resolve(response);
                     }
                     else if (stdErr) {
-                        console.log("🚀 ~ exec ~ stdErr:", stdErr);
+                        logger_1.logger.info("🚀 ~ exec ~ stdErr:", stdErr);
                         const response = {
                             name_lookup: 0.0,
                             start_transfer: 0.0,
@@ -42,9 +42,8 @@ function getStats(url) {
                         resolve(response);
                     }
                     else {
+                        console.log("🚀 ~ exec ~ stdOut:");
                         const parsedResponse = JSON.parse(stdOut);
-                        console.log("🚀 ~ returnnewPromise ~ parsedResponse:", parsedResponse);
-                        // parse response extract stats conver to milisecond
                         const finalResponse = {
                             name_lookup: secondToMillisecond(parsedResponse.name_lookup),
                             start_transfer: secondToMillisecond(parsedResponse.start_transfer),
@@ -59,7 +58,7 @@ function getStats(url) {
         }
         else {
             // while running in local
-            console.log(`checking ping for ${url} in Dev`);
+            logger_1.logger.warn(`checking ping for ${url} in Dev`);
             return {
                 name_lookup: 0.148957,
                 tcp_connection: 0.150128,

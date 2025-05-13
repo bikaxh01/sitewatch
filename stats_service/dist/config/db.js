@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.addToDb = addToDb;
 const influxdb3_client_1 = require("@influxdata/influxdb3-client");
 const dotenv_1 = require("dotenv");
+const logger_1 = require("./logger");
 (0, dotenv_1.config)();
 const token = process.env.INFLUXDB_TOKEN;
 const host = process.env.INFLUXDB_HOST;
@@ -33,7 +34,7 @@ function addToDb(_a) {
             client.close();
         }
         catch (error) {
-            console.log("🚀 ~ error:", error);
+            logger_1.logger.error("🚀 while pushing to db:", error);
         }
     });
 }
